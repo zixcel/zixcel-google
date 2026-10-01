@@ -1,0 +1,6 @@
+schema = "zixcel://google/config/v1"
+config_id = "site-operations"
+workspace_ref = "workspace:site-operations"
+secret_ref = "secret://google/workspace/site-observer"
+services = ["drive", "gmail", "calendar", "analytics", "adsense"]
+
