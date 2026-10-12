@@ -32,3 +32,5 @@ cargo test --locked
 See [the separate Node provider package](packages/provider-google/README.md)
 for account-bound read/write operations and isolated fake-HTTP tests.
 The existing Rust planning API remains independently scoped.
+
+[Isolated public API playground and owner operation boundaries](playground/provider-operations/README.md) · [日本語](README.ja.md)
