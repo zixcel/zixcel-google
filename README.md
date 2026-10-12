@@ -15,7 +15,7 @@ Package distribution is not activated by this documentation. Use the checked-in 
 
 ## Getting started
 
-Install Rust 1.97 or newer and make the declared dependencies available. Use the configured private registry when a dependency is not distributed publicly. Run from this repository:
+Install Rust 1.97 or newer and make the declared dependencies available. Run from this repository:
 
 ```sh
 cargo test --locked
@@ -26,3 +26,9 @@ cargo test --locked
 [Usage guide](docs/getting-started.md)
 
 [Examples](examples) · [Implementation and public interfaces](src) · [Verification cases](tests) · [Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [License](LICENSE) · [Attribution notices](NOTICE)
+
+## Local administrator runtime
+
+See [the separate Node provider package](packages/provider-google/README.md)
+for account-bound read/write operations and isolated fake-HTTP tests.
+The existing Rust planning API remains independently scoped.
