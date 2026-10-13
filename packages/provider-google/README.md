@@ -63,3 +63,11 @@ not implemented by this release. Do not substitute planning for observed rights,
 or estimates for final provider invoices.
 
 Apache-2.0. See LICENSE and NOTICE. Source: zixcel/zixcel-google.
+
+## Administrator discovery (new source catalog)
+
+`serviceProfile` describes the actual account scope, credential source, bounded operation list, and limits of permission/billing coverage. It contains no credentials, performs no login/request and reports `not-observed`; required permissions remain declarations. Discovery is a separate one-use reviewed read, not automatic account selection or authorization. Each cursor/page requires its own plan and grant. Source additions are not contained in the previously published package version until a new release is accepted.
+
+`services.list` requires a project-number account. First inspect Resource Manager data and explicitly bind that number in the owner; do not silently substitute another project. The initial `pageToken` is `null`.
+
+`observeTestedPermissions(account, plan, receipt)` interprets only a successful bound `permissions.test` receipt. It checks scope/request/response digests and a five-minute observation age, and reports returned names separately from omitted-or-unavailable names. It creates no grant, proves no complete IAM inventory and does not turn an omitted result into an explicit denial. The caller owns the trusted receipt provenance; these are not digitally signed authorization records.

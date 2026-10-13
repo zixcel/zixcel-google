@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createControl, operations } from '../dist/index.mjs'
-const account = { provider: "google-cloud", subject: 'synthetic-owner', account: 'synthetic-account' }
-const samples = {"billing.project-read":{},"account.read": {}, "permissions.test": {"permissions": ["resourcemanager.projects.get"]}, "project.set-labels": {"labels": {"env": "test"}}}
+const account = { provider: "google-cloud", subject: 'synthetic-owner', account: '1234567890' }
+const samples = {"billing.project-read":{},"account.read":{},"permissions.test":{"permissions":["resourcemanager.projects.get"]},"project.set-labels":{"labels":{"env":"test"}},"accounts.search":{"pageToken":null},"services.list":{"pageToken":null}}
 const token = 'synthetic-bearer-not-a-real-account'
 function fixture() {
   const requests = []

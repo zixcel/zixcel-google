@@ -1,6 +1,6 @@
 # OSS source contract: zixcel/zixcel-google
 
-Check a Google integration configuration and produce a plan before implementing or enabling the connection.
+Owner-approved Google Cloud project/service read/write operations and scoped permission observations; separate Rust planning API.
 
 ## Responsibility boundary
 
