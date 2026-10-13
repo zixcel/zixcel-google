@@ -1,9 +1,11 @@
+import { discoveryOperations } from './discovery.mjs'
 import { billingOperations } from './billing.mjs'
 import { createLocalProviderControl, parameters, segment, labels } from '@crowsi/provider-http-transport/local-control'
 import type { CredentialSource, LocalAccount, LocalOperation } from '@crowsi/provider-http-transport/local-control'
 const origin = 'https://cloudresourcemanager.googleapis.com'
 const resource = (a: LocalAccount) => `projects/${segment(a.account)}`
 export const operations: readonly LocalOperation[] = Object.freeze([
+  ...discoveryOperations,
   ...billingOperations,
   { id: 'account.read', effect: 'read', requiredPermissions: ['resourcemanager.projects.get'],
     build(input, a) { parameters(input, []); return { method: 'GET', url: `${origin}/v3/${resource(a)}` } } },
@@ -19,7 +21,20 @@ export const operations: readonly LocalOperation[] = Object.freeze([
 export function createControl(account: LocalAccount, credentials: CredentialSource, fetchImplementation?: typeof fetch, extensions: readonly LocalOperation[] = []) {
   if (account.provider !== 'google-cloud') throw new Error('provider/account/mismatch')
   segment(account.account)
-  return createLocalProviderControl({ account, credentials, operations: [...operations, ...extensions], allowedOrigins: [origin, 'https://cloudbilling.googleapis.com'], fetchImplementation })
+  return createLocalProviderControl({ account, credentials, operations: [...operations, ...extensions], allowedOrigins: [origin, 'https://cloudbilling.googleapis.com', 'https://serviceusage.googleapis.com'], fetchImplementation })
 }
 
 export { cliCredentials } from './credentials.mjs'
+
+export const serviceProfile = Object.freeze({
+  provider: "google-cloud",
+  accountScope: "Project ID for project APIs; project number for Service Usage.",
+  credentialSource: "Existing gcloud account; the owner selects the credential subject.",
+  permissionCoverage: "testIamPermissions observes only requested names; missing results do not prove a nonexistent resource or global denial.",
+  billingCoverage: "Project billingInfo is linkage/enabled state, not invoice data.",
+  permissionState: 'not-observed' as const,
+  operations: Object.freeze(operations.map(({ id, effect, requiredPermissions }) =>
+    Object.freeze({ id, effect, requiredPermissions: Object.freeze([...requiredPermissions]) }))),
+})
+
+export { observeTestedPermissions } from './permission-observation.mjs'
