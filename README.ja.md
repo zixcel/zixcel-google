@@ -4,4 +4,7 @@ provider固有のaccount/resource mappingと必要権限・副作用を持つ汎
 
 [Node package](packages/provider-google/README.md) · [読み書きplaygroundと公開配布consumer](playground/provider-operations/README.ja.md) · [English](README.md)
 
-現在のpackageは `@zixcel/provider-google@0.1.1` です。実account受入、完全IAM discovery、invoice正規化・監視の完成とは区別します。
+現在のpackageは `@zixcel/provider-google` です。実account受入、完全IAM discovery、invoice正規化・監視の完成とは区別します。
+
+Dependency updates: [repository policy](docs/dependency-updates.md).
+Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
