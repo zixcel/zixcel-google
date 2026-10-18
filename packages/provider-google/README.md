@@ -1,73 +1,71 @@
 # @zixcel/provider-google
 
-Local administrator operations composed with Crowsi's one-use HTTP control.
+Thin TypeScript integration for Google plans from the Rust core and Crowsi's
+one-use administrator authorization/HTTP transport. Apache-2.0.
 
-Initial runtime profile: Google Cloud; the existing Rust planner covers separate Google services.
-This is the Node runtime package, separate from any existing Rust planning API.
+## Runtime requirements
 
-## Install
+Linux (including WSL), Node 24 and an explicitly installed, verified `zix-google`
+native package supporting `zix-google-control/v1`. Runtime users do not need a
+Rust compiler or gcloud. This source is the 0.2.0 candidate; check official release
+availability independently before installing it. There is no automatic download,
+login, credential-store lookup, HTTP call or Cloud change on package import.
 
-```sh
-npm install @zixcel/provider-google
-```
+## Compose an approved operation
 
-Registry publication is a separate gate; the initial candidate is not declared
-published until its official archive and provenance are verified.
-
-## Initial catalog
-
-Google Cloud project metadata, explicit testIamPermissions, project labels and project billing linkage. Detailed usage/invoice totals require a separate reviewed export/query adapter; billing linkage is not spend data.
-
-## Trusted owner composition
-
-```js
-import { createControl } from '@zixcel/provider-google'
-const control = createControl(account, credentialSource)
-const plan = control.prepare(operationId, input)
-// Present method, URL, exact body, effect and permissions to the administrator.
+```ts
+import { createNativePlanner, createControl } from '@zixcel/provider-google'
+const planner = createNativePlanner({
+  executable: installedExecutable, // absolute path in an owner-protected directory
+  sha256: verifiedReleaseBinarySha256, // from the separately verified release
+})
+const control = createControl(account, credentialSource, planner)
+const plan = control.prepare('account.read', {})
+// Present the exact plan/account/permissions to the trusted administrator.
 const grant = control.approve(plan, Date.now() + 30_000)
 const receipt = await control.execute(grant.id, plan)
 ```
 
-The account identifies provider, subject and account scope. The trusted owner
-supplies credentials; callers never receive the bearer token. Only expose an
-execute port to generated code, and run it in a separately restricted workload.
-Local approval does not grant remote provider permissions. Required permissions
-are operation metadata, not proof of effective access or complete IAM inventory.
+`account` has `provider: 'google-cloud'`, `subject` and `account` (project ID or
+number). Service Usage and label updates require a project number. The owner
+supplies a Crowsi `CredentialSource`; the planner never receives its token.
+The owner must verify subject/account selection; a token's identity is not
+inferred from the declared account. `describeService(planner)` returns immutable
+operation metadata without claiming observed access. Read/write and cost are
+separate: `request_charge: not_assessed` does not promise free API usage.
 
-Read and write use the same prepare/approve/execute protocol. There is no login,
-network request, keyring lookup, cloud mutation or billing action on import.
-Unknown operations and extra input fields are rejected. Pagination is not
-followed automatically; review a separate request for every additional page.
+## Supported catalog
 
-The optional fourth argument is a trusted-owner extension catalog. Extensions
-must declare their method, exact resource mapping, input validation, effect and
-permission requirements. The same account/destination/body/grant boundary applies.
-Never let an LLM supply that catalog or acquire a new grant without owner review.
+Rust alone defines accounts.search, services.list, account.read, permissions.test,
+project.set-labels and billing.project-read. Search/list input is `{ pageToken:
+null }` for the first page. Each additional page is a separately approved request.
+Permission input is `{ permissions: ['resourcemanager.projects.get'] }`.
+Label input is `{ labels: { env: 'test' }, etag: observedProjectEtag }`.
+Labels replace the supplied label set; review removals as well as additions.
 
-## Test isolation
+Label etags must come from the current project read. The response to a PATCH can
+be a pending Google Operation; an accepted HTTP response does not prove a finished
+mutation. No automatic retry/polling is added. Resolve uncertain outcomes with a
+new approved read instead of reusing a grant or automatically issuing a new write.
+Billing linkage is not actual spend. Native inventory/billing-export reads are
+available through `zix google`; this package does not copy those implementations.
+
+`observeTestedPermissions(account, plan, receipt, planner)` validates the native
+request and the bound Crowsi receipt before returning requested-name observations.
+It reports omitted names as unavailable/not returned, never a complete IAM denial.
+The caller owns receipt provenance; these are not signed authorization records.
+
+## Source verification
 
 ```sh
 npm ci --ignore-scripts
 npm test
+node ../../.github/scripts/provider-consumer.mjs
 ```
 
-Tests inject fake credentials and fake HTTP state. They verify read and write,
-changed resource rejection and permission denial without reading the host's
-credential stores or contacting provider accounts. These tests do not establish
-actual-account acceptance. Production connection is a later, separate operation.
-
-The first catalog is intentionally bounded. Binary finance reports, complete
-provider IAM introspection, continuous polling and destructive operations are
-not implemented by this release. Do not substitute planning for observed rights,
-or estimates for final provider invoices.
-
-Apache-2.0. See LICENSE and NOTICE. Source: zixcel/zixcel-google.
-
-## Administrator discovery (new source catalog)
-
-`serviceProfile` describes the actual account scope, credential source, bounded operation list, and limits of permission/billing coverage. It contains no credentials, performs no login/request and reports `not-observed`; required permissions remain declarations. Discovery is a separate one-use reviewed read, not automatic account selection or authorization. Each cursor/page requires its own plan and grant. Source additions are not contained in the previously published package version until a new release is accepted.
-
-`services.list` requires a project-number account. First inspect Resource Manager data and explicitly bind that number in the owner; do not silently substitute another project. The initial `pageToken` is `null`.
-
-`observeTestedPermissions(account, plan, receipt)` interprets only a successful bound `permissions.test` receipt. It checks scope/request/response digests and a five-minute observation age, and reports returned names separately from omitted-or-unavailable names. It creates no grant, proves no complete IAM inventory and does not turn an omitted result into an explicit denial. The caller owns the trusted receipt provenance; these are not digitally signed authorization records.
+`npm test` builds the actual Rust CLI, then exercises it using synthetic accounts
+and fake HTTP. The independent consumer tests the packed npm artifact and a copied
+native executable. No real credential or Cloud account is used. Release and live
+acceptance are separate. The previous implicit gcloud helper, duplicate request
+builders and arbitrary extension catalog are removed; callers must adopt the
+explicit planner argument. See [architecture](../../docs/architecture.md).

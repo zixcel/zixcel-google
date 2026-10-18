@@ -6,22 +6,32 @@ const root = process.cwd(), manifest = JSON.parse(readFileSync('package.json'))
 const project = mkdtempSync(join(tmpdir(), 'provider-owner-consumer-'))
 const env = { ...process.env, NPM_CONFIG_REGISTRY: 'https://registry.npmjs.org',
  NPM_CONFIG_USERCONFIG: join(project, 'empty.npmrc'), NPM_CONFIG_GLOBALCONFIG: join(project, 'empty-global.npmrc'),
+ ZIX_GOOGLE_TEST_BINARY: join(project, 'zix-google'),
  NPM_CONFIG_CACHE: join(project, 'cache'), NODE_AUTH_TOKEN: '', NPM_TOKEN: '', GH_TOKEN: '', GITHUB_TOKEN: '' }
 const run = (command, args, cwd = project) => {
  try { return execFileSync(command, args, { cwd, env, stdio: 'pipe', timeout: 180000 }) }
  catch (error) { throw new Error(`${command} failed: ${String(error.stdout ?? '').slice(-1600)} ${String(error.stderr ?? '').slice(-1600)}`) }
 }
 try {
+ copyFileSync(resolve(root, '../../target/release/zix-google'), env.ZIX_GOOGLE_TEST_BINARY)
+ copyFileSync(resolve(root, 'test/native-support.mjs'), join(project, 'native-support.mjs'))
  writeFileSync(env.NPM_CONFIG_USERCONFIG, ''); writeFileSync(env.NPM_CONFIG_GLOBALCONFIG, '')
  const packed = JSON.parse(run('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', project], root))
  const rows = Array.isArray(packed) ? packed : Object.values(packed)
  if (rows.length !== 1 || rows[0].name !== manifest.name) throw new Error('Unexpected candidate identity')
+ const paths = rows[0].files.map(file => file.path)
+ if (paths.some(path => /^dist\/(billing|discovery|credentials)\./.test(path))) throw new Error('Retired Google builders remain in archive')
  writeFileSync(join(project, 'package.json'), JSON.stringify({ private: true, type: 'module' }))
  run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', join(project, rows[0].filename), 'typescript@5.9.3', '@types/node@24.19.2'])
  const tests = readFileSync('test/control.test.mjs', 'utf8').replace("'../dist/index.mjs'", JSON.stringify(manifest.name))
  writeFileSync(join(project, 'control.test.mjs'), tests)
  copyFileSync(resolve(root, '../../playground/provider-operations/demo.mjs'), join(project, 'demo.mjs'))
- writeFileSync(join(project, 'consumer.mts'), `import { createControl } from '${manifest.name}';\nconst control = createControl({provider:'synthetic',subject:'owner',account:'account'},{acquire:async()=> 'synthetic'}, async()=>new Response('{}'));\ncontrol.prepare('account.read', {});\n`)
+ writeFileSync(join(project, 'consumer.mts'), `import { createControl, createNativePlanner } from '${manifest.name}';
+const planner = createNativePlanner({executable:'/owner/verified/zix-google',sha256:'a'.repeat(64)});
+const control = createControl({provider:'google-cloud',subject:'owner',account:'1234567890'},
+  {acquire:async()=> 'synthetic'}, planner, async()=>new Response('{}'));
+control.prepare('account.read', {});
+`)
  run('node', ['node_modules/typescript/bin/tsc', '--noEmit', '--strict', '--skipLibCheck', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', 'consumer.mts'])
  const publicTests = ['control.test.mjs']
  for (const name of readdirSync('test').filter(name => name.endsWith('.test.mjs') && name !== 'control.test.mjs')) {

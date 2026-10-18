@@ -1,26 +1,44 @@
-# Using zixcel-google
+# Getting started
 
-Check a Google integration configuration and produce a plan before implementing or enabling the connection.
+## Inspect a Google account locally
 
-## Before you start
+Install a verified native Google package and the independent
+[zix dispatcher](https://github.com/zixcel/cli/blob/main/docs/install.md).
+Verify the release identity, archive checksums and bundled file hashes before
+registering `google.extension.json` with its `zix-google` executable.
+Use the command syntax reported by `zix extensions --help` for your dispatcher.
 
-The current package validates configuration and plans operations. It does not provide a complete live service client.
-
-## First steps
-
-Run from the repository root:
+The native runtime needs no Rust compiler, Node or Google SDK. Supply an existing
+short-lived access token only in the local environment as described in
+[administration](administration.md); never paste it into an Issue or argument.
 
 ```sh
-cargo test --locked
+zix google --help
+zix describe google --format json
+zix google projects list --max-pages 2
+zix google billing accounts list --max-pages 2
 ```
 
-## How to assess the result
+Missing credentials fail without starting a browser. Successful reads can still
+be partial; inspect coverage and section failures. Enabled APIs and billing
+linkage do not prove workload use or an invoice amount.
 
-- Validate the declared integration settings.
-- Inspect a bounded plan and missing prerequisites.
+## Use approved operations from TypeScript
 
-A passing source-level check establishes only what that check observes. Keep missing configuration, unavailable services and unverified deployment paths visible.
+[provider-google](../packages/provider-google/README.md) obtains operation plans
+from the verified native executable, then uses Crowsi for explicit approval and
+bounded execution. Its synthetic playground proves local composition only.
+The planner itself never executes a write. Real operations require a credential
+with the remote permissions and the owner's separate approval.
 
-## Continue reading
+## Verify the source
 
-[Repository overview](../README.md)
+```sh
+cargo test --locked --workspace --all-targets --all-features
+npm --prefix packages/provider-google ci --ignore-scripts
+npm --prefix packages/provider-google test
+```
+
+The Node source tests build the actual Rust binary; installed runtime users use
+the native release instead. See [architecture](architecture.md) for migration
+and supported limits, and [releases](registry-release.md) for publication.

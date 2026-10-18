@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { segment } from '@crowsi/provider-http-transport/local-control'
+import type { GooglePlanner } from './native-planner.mjs'
 import type { LocalAccount, LocalPlan } from '@crowsi/provider-http-transport/local-control'
 interface Receipt {
   schema: string; operation: string; requestDigest: string; responseDigest: string;
@@ -10,11 +10,10 @@ const sameAccount = (a: LocalAccount, b: LocalAccount) =>
   a.provider === b.provider && a.account === b.account && a.subject === b.subject
 
 /** Information-only interpretation of the requested test, never an authorization constructor. */
-export function observeTestedPermissions(account: LocalAccount, plan: LocalPlan, receipt: Receipt, now = Date.now()) {
+export function observeTestedPermissions(account: LocalAccount, plan: LocalPlan, receipt: Receipt, planner: GooglePlanner, now = Date.now()) {
   const { digest, ...source } = plan
   if (account.provider !== 'google-cloud' || !sameAccount(account, plan.account)
     || plan.operation !== 'permissions.test' || plan.request.method !== 'POST'
-    || plan.request.url !== `https://cloudresourcemanager.googleapis.com/v3/projects/${segment(account.account)}:testIamPermissions`
     || hash(source) !== digest || receipt.requestDigest !== digest || receipt.operation !== plan.operation
     || receipt.schema !== 'crowsi://provider-operation-receipt/v1' || receipt.status !== 200
     || hash(receipt.data) !== receipt.responseDigest) throw new Error('provider/observation/binding-rejected')
@@ -23,6 +22,8 @@ export function observeTestedPermissions(account: LocalAccount, plan: LocalPlan,
     throw new Error('provider/observation/stale')
   }
   const query = JSON.parse(plan.request.body ?? '{}') as { permissions?: unknown }
+  const expected = planner.prepare('permissions.test', account, query)
+  if (plan.request.url !== expected.url || plan.request.body !== expected.body) throw new Error('provider/observation/binding-rejected')
   const requested = query.permissions
   if (!Array.isArray(requested) || requested.length < 1 || requested.length > 32
     || requested.some(p => typeof p !== 'string' || !/^[A-Za-z][A-Za-z0-9.]{1,127}$/.test(p))

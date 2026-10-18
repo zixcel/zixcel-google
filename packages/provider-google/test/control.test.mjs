@@ -1,14 +1,16 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { createControl, operations } from '../dist/index.mjs'
+import { createControl, createNativePlanner } from '../dist/index.mjs'
+import { selection } from './native-support.mjs'
+const planner = createNativePlanner(selection), operations = planner.catalog.operations
 const account = { provider: "google-cloud", subject: 'synthetic-owner', account: '1234567890' }
-const samples = {"billing.project-read":{},"account.read":{},"permissions.test":{"permissions":["resourcemanager.projects.get"]},"project.set-labels":{"labels":{"env":"test"}},"accounts.search":{"pageToken":null},"services.list":{"pageToken":null}}
+const samples = {"billing.project-read":{},"account.read":{},"permissions.test":{"permissions":["resourcemanager.projects.get"]},"project.set-labels":{"labels":{"env":"test"},"etag":"synthetic-etag"},"accounts.search":{"pageToken":null},"services.list":{"pageToken":null}}
 const token = 'synthetic-bearer-not-a-real-account'
 function fixture() {
   const requests = []
   let state = { initialized: true }
   let status = 200
-  const control = createControl(account, { acquire: async () => token }, async (url, init) => {
+  const control = createControl(account, { acquire: async () => token }, planner, async (url, init) => {
     assert.equal(init.headers.Authorization, `Bearer ${token}`)
     requests.push({ url, method: init.method, body: init.body })
     if (status !== 200) return new Response('rejected', { status })
@@ -44,7 +46,7 @@ test('write operations change isolated state and can be observed through the sam
 test('rejects arbitrary API, input fields and resource changes', async () => {
   const f = fixture()
   assert.throws(() => f.control.prepare('arbitrary.delete', {}), /unsupported/)
-  assert.throws(() => f.control.prepare('account.read', { token: 'forbidden' }), /input\/fields/)
+  assert.throws(() => f.control.prepare('account.read', { token: 'forbidden' }), /native\/request-rejected/)
   const plan = f.control.prepare('account.read', {})
   const grant = f.control.approve(plan, Date.now() + 30000)
   await assert.rejects(f.control.execute(grant.id, { ...plan, account: { ...account, account: 'other' } }), /plan\/changed/)
@@ -59,7 +61,7 @@ test('propagates remote permission denial without secret/error body leakage', as
 
 test('rejects decoded credential echoes without exposing them to callers', async () => {
   const escaped = [...token].map(character => `\\u${character.charCodeAt(0).toString(16).padStart(4, '0')}`).join('')
-  const control = createControl(account, { acquire: async () => token }, async () =>
+  const control = createControl(account, { acquire: async () => token }, planner, async () =>
     new Response(`{"echo":"${escaped}"}`, { status: 200 }))
   const plan = control.prepare('account.read', {})
   const grant = control.approve(plan, Date.now() + 30000)
