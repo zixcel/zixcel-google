@@ -53,6 +53,16 @@ fn run() -> Result<(), &'static str> {
         fs::copy(path, directory.join(path)).map_err(|_| "owner_notice_missing")?;
     }
     if filename == "zix-google" {
+        for (source, name) in [
+            (
+                "playground/inspect-accessible-local.sh",
+                "inspect-accessible-local.sh",
+            ),
+            ("docs/administration.md", "ADMINISTRATION.md"),
+        ] {
+            fs::copy(source, directory.join(name)).map_err(|_| "consumer_documentation_missing")?;
+        }
+
         let result = Command::new(binary)
             .env_clear()
             .arg("--manifest")

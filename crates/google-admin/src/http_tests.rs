@@ -75,13 +75,36 @@ fn invalid_tokens_and_arbitrary_paths_are_rejected_before_network() {
             Err(Error::CredentialInvalid)
         ));
     }
-    let mut http = GoogleHttp::new("SYNTHETIC_ONLY").unwrap();
     for path in [
         "https://other.invalid/",
         "/v1/projects/../../other",
         "/v1/projects/sample-project/serviceAccounts/other@evil.invalid",
         "/v1/projects/sample-project/serviceAccounts/reader-account@sample-project.iam.gserviceaccount.com/keys?other=true",
     ] {
-        assert_eq!(http.get(path).unwrap_err(), Error::InvalidInput);
+        assert_eq!(ReadRequest::iam(path).unwrap_err(), Error::InvalidInput);
     }
+}
+
+#[test]
+fn quota_identity_is_explicit_and_request_budget_precedes_network() {
+    let mut http = GoogleHttp::new("SYNTHETIC_ONLY").unwrap();
+    assert!(http.quota_project.is_none());
+    for project in [
+        "../sample-project",
+        "sample-project\r\nheader",
+        "https://other.invalid",
+    ] {
+        assert_eq!(
+            http.set_quota_project(project).unwrap_err(),
+            Error::InvalidInput
+        );
+    }
+    http.set_quota_project("sample-project").unwrap();
+    assert_eq!(
+        http.quota_project.as_ref().unwrap().to_str().unwrap(),
+        "sample-project"
+    );
+    http.remaining = 0;
+    let request=ReadRequest::iam("/v1/projects/sample-project/serviceAccounts/reader-account@sample-project.iam.gserviceaccount.com").unwrap();
+    assert_eq!(http.read(&request).unwrap_err(), Error::Deadline);
 }

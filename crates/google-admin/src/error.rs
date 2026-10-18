@@ -10,15 +10,40 @@ pub enum Error {
     Forbidden,
     Unavailable,
     AccountUnavailable,
+    ProjectUnavailable,
     KeyListUnavailable,
     RateLimited,
     HttpStatus,
+    ServiceDisabled,
+    ScopeInsufficient,
+    QuotaProjectUnavailable,
     ResponseTooLarge,
     InvalidResponse,
     ScopeMismatch,
     Protocol,
 }
 impl Error {
+    pub(crate) fn at_project(self) -> Self {
+        if self == Self::Unavailable {
+            Self::ProjectUnavailable
+        } else {
+            self
+        }
+    }
+    pub(crate) fn at_account(self) -> Self {
+        if self == Self::Unavailable {
+            Self::AccountUnavailable
+        } else {
+            self
+        }
+    }
+    pub(crate) fn at_key_list(self) -> Self {
+        if self == Self::Unavailable {
+            Self::KeyListUnavailable
+        } else {
+            self
+        }
+    }
     pub fn code(self) -> &'static str {
         match self {
             Self::InvalidInput => "invalid_input",
@@ -30,9 +55,13 @@ impl Error {
             Self::Forbidden => "forbidden",
             Self::Unavailable => "resource_unavailable",
             Self::AccountUnavailable => "account_unavailable",
+            Self::ProjectUnavailable => "project_unavailable",
             Self::KeyListUnavailable => "key_list_unavailable",
             Self::RateLimited => "rate_limited",
             Self::HttpStatus => "http_failed",
+            Self::ServiceDisabled => "service_disabled",
+            Self::ScopeInsufficient => "oauth_scope_insufficient",
+            Self::QuotaProjectUnavailable => "quota_project_unavailable",
             Self::ResponseTooLarge => "response_too_large",
             Self::InvalidResponse => "invalid_response",
             Self::ScopeMismatch => "scope_mismatch",

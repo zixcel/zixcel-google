@@ -1,13 +1,13 @@
 use chrono::{DateTime, Utc};
 use serde_json::{Value, json};
-use zixcel_google_admin::{Error, IamRead, KeyQuery};
+use zixcel_google_admin::{Error, GoogleRead, KeyQuery, ReadRequest};
 pub struct Fake {
     pub replies: Vec<Result<Vec<u8>, Error>>,
     pub paths: Vec<String>,
 }
-impl IamRead for Fake {
-    fn get(&mut self, path: &str) -> Result<Vec<u8>, Error> {
-        self.paths.push(path.to_owned());
+impl GoogleRead for Fake {
+    fn read(&mut self, request: &ReadRequest) -> Result<Vec<u8>, Error> {
+        self.paths.push(request.path_and_query());
         self.replies.remove(0)
     }
 }
