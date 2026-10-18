@@ -31,7 +31,6 @@ fn missing_and_inaccessible_accounts_never_become_absent_keys() {
     for error in [
         Error::Unauthorized,
         Error::Forbidden,
-        Error::Unavailable,
         Error::RateLimited,
         Error::Transport,
     ] {

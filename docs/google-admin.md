@@ -6,6 +6,8 @@ The Google adapter fetches the selected service-account metadata, binds its proj
 
 The transport is HTTPS-only to `iam.googleapis.com`, without inherited proxies, redirects or automatic retries. It allows two scoped requests, a total deadline, and bounded response bodies. Provider error bodies and raw diagnostics are never printed. Responses contain only selected key metadata and a non-authoritative observation. IAM access errors never become a successful missing-key result.
 
+From 0.1.1, HTTP 404 is reported as `account_unavailable` during account lookup and `key_list_unavailable` during key listing. These identify the failing phase without asserting that a key or account was deleted. Both remain errors; only a successfully bound account and key list can yield `not_present`. No raw provider response or additional credential is exposed.
+
 Use the independent `zixcel/cli` package to register the verified manifest and executable; the root `zixcel-google` planning binary is not the administrator entry point. [Install and invocation](https://github.com/zixcel/cli/blob/main/docs/install.md).
 
 The extension obtains an externally supplied `ZIX_GOOGLE_ACCESS_TOKEN`; no local Google SDK, old service-account private key, authentication daemon, or embedded OAuth client is used. Token minting/login is outside this initial module. OAuth scopes: IAM or cloud-platform. Required permissions: `iam.serviceAccounts.get` and `iam.serviceAccountKeys.list`. The manifest declaration is not proof of authorization.

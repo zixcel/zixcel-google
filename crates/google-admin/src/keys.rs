@@ -46,14 +46,26 @@ pub fn inspect_key(
     now: DateTime<Utc>,
 ) -> Result<KeyObservation> {
     let path = query.account_path()?;
-    let account: Account = decode(&transport.get(&path)?)?;
+    let account: Account = decode(&transport.get(&path).map_err(|error| {
+        if error == Error::Unavailable {
+            Error::AccountUnavailable
+        } else {
+            error
+        }
+    })?)?;
     account.bind(query)?;
     // The immutable account ID prevents an email being deleted/recreated between the two reads.
     let keys_path = format!(
         "/v1/projects/{}/serviceAccounts/{}/keys?keyTypes=USER_MANAGED",
         query.project, account.unique_id
     );
-    let list: KeyList = decode(&transport.get(&keys_path)?)?;
+    let list: KeyList = decode(&transport.get(&keys_path).map_err(|error| {
+        if error == Error::Unavailable {
+            Error::KeyListUnavailable
+        } else {
+            error
+        }
+    })?)?;
     if list.keys.len() > 100 {
         return Err(Error::InvalidResponse);
     }
