@@ -40,6 +40,7 @@ fn query(op: &str, args: &[(&str, &str)]) -> InventoryQuery {
 }
 mod admission;
 mod binding;
+mod configuration;
 mod data_safety;
 mod overview;
 mod pagination;

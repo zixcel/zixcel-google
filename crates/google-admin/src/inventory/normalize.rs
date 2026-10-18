@@ -8,6 +8,7 @@ use crate::{Error, Result};
 use serde_json::Value;
 mod base;
 mod billing;
+mod configuration;
 pub fn record(
     value: &Value,
     model: Model,

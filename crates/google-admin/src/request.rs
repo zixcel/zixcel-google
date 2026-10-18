@@ -10,6 +10,7 @@ pub enum GoogleApi {
     Sql,
     Storage,
     Run,
+    BigQuery,
 }
 impl GoogleApi {
     pub fn origin(self) -> &'static str {
@@ -23,6 +24,7 @@ impl GoogleApi {
             Self::Sql => "https://sqladmin.googleapis.com",
             Self::Storage => "https://storage.googleapis.com",
             Self::Run => "https://run.googleapis.com",
+            Self::BigQuery => "https://bigquery.googleapis.com",
         }
     }
 }

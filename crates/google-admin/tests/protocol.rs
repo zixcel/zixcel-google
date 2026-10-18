@@ -63,7 +63,7 @@ fn bounded_input_and_manifest_declare_only_the_implemented_read_operation() {
         .unwrap();
     assert!(out.status.success());
     let m: Value = serde_json::from_slice(&out.stdout).unwrap();
-    assert_eq!(m["commands"].as_array().unwrap().len(), 19);
+    assert_eq!(m["commands"].as_array().unwrap().len(), 21);
     assert!(
         m["commands"]
             .as_array()

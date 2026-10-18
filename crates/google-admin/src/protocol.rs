@@ -11,6 +11,7 @@ fn run(request: &Request) -> Result<Value> {
     let quota = match &input {
         Input::Key(_, q) => q.as_deref(),
         Input::Inventory(q) => q.quota_project.as_deref(),
+        Input::Export(q) => q.quota_project.as_deref(),
     };
     let mut http = GoogleHttp::from_env()?;
     http.limit_time(std::time::Duration::from_millis(request.limits.timeout_ms))?;
@@ -25,6 +26,7 @@ fn run(request: &Request) -> Result<Value> {
             serde_json::to_value(inventory::overview(&mut http, &query)?)
         }
         Input::Inventory(query) => serde_json::to_value(inventory::inspect(&mut http, &query)?),
+        Input::Export(query) => Ok(crate::exports::execute(&mut http, &query)?),
     }
     .map_err(|_| Error::InvalidResponse)?;
     bounded_value(value, request.limits.maximum_response_bytes)
@@ -55,6 +57,7 @@ pub fn execute(request: &Request) -> Response {
 }
 pub fn manifest() -> Value {
     let mut commands = inventory::manifest::commands();
+    commands.extend(crate::exports::commands());
     commands.push(json!({"id":OPERATION,"words":["iam","keys","inspect"],"effect":"read",
         "description":"Observe one service-account key without using or changing it.",
         "required_permissions":["iam.serviceAccounts.get","iam.serviceAccountKeys.list"],

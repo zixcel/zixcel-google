@@ -1,9 +1,9 @@
 [package]
 name = "zixcel-google-admin"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 rust-version = "1.97"
-description = "Bounded Google IAM observations for local administrator tools"
+description = "Bounded Google administrator inventory and existing billing export observations"
 license = "Apache-2.0"
 repository = "https://github.com/zixcel/zixcel-google"
 publish = false
