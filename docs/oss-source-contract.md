@@ -1,66 +1,50 @@
 # OSS source contract: zixcel/zixcel-google
 
-Owner-approved Google Cloud project/service read/write operations and scoped permission observations; separate Rust planning API.
+Google-specific resource observations and scoped operation planning live in one
+Rust core. The native CLI and thin TypeScript/Crowsi integration are separate
+entrypoints in this repository, not competing implementations.
 
-## Responsibility boundary
+## Source owners
 
-Own the named reusable integration/data mechanism. Product roles/UI and operational approvals stay with consumers; transport/custody reuse managed Crowsi components where capabilities fit. Planning-only APIs must remain clearly distinguished from implemented external operations.
-
-Same-function managed packages take priority when their actual capabilities fit. Do not add an unrelated dependency merely to connect organizations. Preserve upstream LICENSE/NOTICE and immutable release/history evidence; unused compatibility sources belong in Git history, not the supported API.
-
-## Package ownership
-
-| Manifest | Package | Distribution policy |
+| Manifest | Package | Responsibility |
 | --- | --- | --- |
-| `Cargo.toml` | `zixcel-google` | source-only; publish=false |
-| `packages/provider-google/package.json` | `@zixcel/provider-google` | npm candidate; verify official version/provenance |
+| `crates/google-core/Cargo.toml` | zixcel-google-core | Google models, observations, scope and control request validation |
+| `crates/google-cli/Cargo.toml` | zixcel-google-cli | Native `zix-google` process protocols and packaging |
+| `packages/provider-google/package.json` | @zixcel/provider-google | Verified Rust planner to Crowsi approval/execution |
 
-Manifest versions and publish flags are declarations, not proof of published availability. Public npm exports and Rust implementation/docs belong to the manifests above; generated dist and sibling checkouts are not source-of-truth implementations.
+Rust packages are source/build dependencies (`publish=false`). The native package
+is distributed through owner GitHub Releases; npm is released separately with
+GitHub OIDC. Manifest versions are not proof of registry availability.
+The root Cargo manifest is a virtual workspace. The old unused configuration-only
+planner is removed; there is no fallback path that bypasses the new core.
 
-## Source completion criteria
+## Completion requirements
 
-1. The documented purpose, public exports, validators/schema and actual implementation agree. Remove only confirmed-unused aliases, schemas and compatibility adapters after checking consumers; a shared field name does not imply a shared trust responsibility.
-2. Runtime and official dependency resolution work from an independent checkout with committed locks. No local sibling artifact, private registry or ambient owner credential is required for the OSS source path.
-3. Supported behavior has reproducible examples/playground and functional tests, including invalid input and relevant failure/cancellation/replay/tenant boundaries. A policy-only CI or planning fixture does not prove external effects.
-4. CI runs the declared functional acceptance without disguising skipped/unavailable checks as success. Changed public package bytes receive a new reviewed release; immutable old versions are never overwritten.
-5. License/NOTICE, security reporting, usage and the actual supported/unsupported scope stay in the owning repository. The owner operates independently of a central private management checkout.
-6. Source acceptance, artifact/registry acceptance and production deployment are separate records. This document defines the target; it does not declare unexecuted tests, unreleased APIs or live-account validation completed.
+1. Public interfaces, docs, package manifests and implementation agree.
+2. Independent consumers resolve public managed dependencies with committed locks;
+   no central private repository, sibling checkout or ambient credential is needed.
+3. Rust tests cover scope/HTTP boundaries and actual CLI protocols. Node tests use
+   the actual native planner, synthetic credentials and fake HTTP for read/write,
+   input denial, permission denial and one-use grant behavior.
+4. Crowsi retains generic authorization and bounded transport; no parallel grant
+   system is introduced. Credential subject selection and operational approval
+   remain the trusted owner's responsibility.
+5. Pricing, side effects, resource creation and observation completeness remain
+   separate. Missing access and partial pages never imply zero cost or no resource.
+6. Source testing, immutable archive publication and real-account acceptance are
+   separate. Never complete unexecuted or skipped checks by inference.
+7. Apache-2.0, owner NOTICE and third-party notices remain with each distribution.
 
-## Existing verification entrypoints
+## Verification and release entrypoints
 
-- [.github/workflows/ci.yml](../.github/workflows/ci.yml)
-- [.github/workflows/oss-policy.yml](../.github/workflows/oss-policy.yml)
-- [.github/workflows/provider-control.yml](../.github/workflows/provider-control.yml)
-- [.github/workflows/publish-provider.yml](../.github/workflows/publish-provider.yml)
+- [Rust CI](../.github/workflows/ci.yml)
+- [TypeScript/native composition](../.github/workflows/provider-control.yml)
+- [Repository policy](../.github/workflows/oss-policy.yml)
+- [Native release](../.github/workflows/release-google.yml)
+- [npm tag release](../.github/workflows/publish-npm.yml)
+- [Explicit reviewed npm publication](../.github/workflows/publish-provider.yml)
 
-Use the package scripts/owner CI above and the repository README for exact commands. When schema files exist, their canonical validator and consumer must be checked together; deleting a definition on a text search alone is insufficient.
-
-## Acceptance record
-
-Inventory baseline source: `abb4678e95be59cd6fe23a21004a2413180926f5`. This baseline records observed files and declared interfaces, not a completed audit. Subsequent source changes are accepted at their exact commit with test evidence. Production hosting, account login, secret custody installation and data migration remain outside source-only acceptance.
-
-## Owned source and acceptance map
-
-[oss-source-map.json](oss-source-map.json) is the tracked map of package
-interfaces, declared commands, schemas, functional test sources, examples and CI
-jobs. It keeps each responsibility attached to its actual physical source owner.
-Public exports are supported only within this repository's responsibility boundary;
-a filename or schema declaration does not grant product or cloud authority.
-
-| Package | Canonical manifest | Responsibility/interface |
-| --- | --- | --- |
-| `zixcel-google` | [Cargo.toml](../Cargo.toml) | Planning-only Google service connector boundary for Zixcel |
-| `@zixcel/provider-google` | [packages/provider-google/package.json](../packages/provider-google/package.json) | google local administrator operations with one-use Crowsi authorization |
-
-For source acceptance, run each applicable functional CI job with the committed
-locks from an independent checkout. Match public entrypoints to their test/example
-sources in the map; test the relevant invalid input and failure boundary as well as
-the normal path. Policy-only, skipped and credential-dependent jobs do not establish
-functional coverage. Release jobs establish artifact acceptance only when actually
-run at the reviewed commit. A source-only/example repository must not be presented
-as a complete external service or a released package.
-
-Schema definitions in the map remain owned by their canonical validator and
-consumers. An absent schema file means no separate schema file is declared; it does
-not mean the runtime interface has no validation. Do not introduce another common
-schema solely to mirror an implementation type.
+[Architecture](architecture.md), [source map](oss-source-map.json),
+[administration](administration.md) and [playground](../playground/provider-operations/README.md)
+state the supported interfaces and limits. No OAuth/login, paid query, export
+setup, full IAM inventory or finalized-invoice normalization is claimed here.

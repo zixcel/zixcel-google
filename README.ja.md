@@ -1,20 +1,32 @@
 # zixcel-google
 
-provider固有のaccount/resource mappingと必要権限・副作用を持つ汎用連携libraryです。認可・限定HTTP実行は正式配布のCrowsiを利用し、業務policyや実account登録はownerアプリに残します。
+ローカルの管理ツールやアプリから、Google Cloudの資源・権限・課金情報を確認し、
+対象を限定した操作を計画・実行するためのOSSです。[English](README.md)
 
-[Node package](packages/provider-google/README.md) · [読み書きplaygroundと公開配布consumer](playground/provider-operations/README.ja.md) · [English](README.md)
+| 配置 | 責務 |
+| --- | --- |
+| `crates/google-core` | Google固有の型、取得・検証、操作要求の組み立て |
+| `crates/google-cli` | `zix google` 用のネイティブ入口とTypeScript用の計画プロトコル |
+| `packages/provider-google` | Rustの計画をCrowsiの承認・HTTP実行へ渡すTypeScript接続 |
 
-現在のpackageは `@zixcel/provider-google` です。実account受入、完全IAM discovery、invoice正規化・監視の完成とは区別します。
+Google固有の要求定義をTypeScriptへ重複実装しません。共通入口は
+[zixcel/cli](https://github.com/zixcel/cli)に置き、このrepoはGoogle固有の処理を持ちます。
 
-Dependency updates: [repository policy](docs/dependency-updates.md).
-Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
+[導入](docs/getting-started.md) · [調査コマンドと取得範囲](docs/administration.md) ·
+[TypeScript操作](packages/provider-google/README.md) ·
+[合成例](playground/provider-operations/README.ja.md) · [構成](docs/architecture.md)
 
-## Native管理extension
+ネイティブの21操作は読み取りです。TypeScriptからは、Rustで生成した操作計画を
+既存Crowsiの承認・一回限り実行へ渡せます。ラベル更新には取得済みetagが必要です。
+計画のみの成功を、外部APIの操作成功として扱いません。
 
-[Google IAM観測module](docs/google-admin.md) は独立したRust moduleとして `zix google iam keys inspect` を提供します。既存planning crate・npm libraryのAPIとは区別し、ローカルのGoogle SDKを必須にしません。
+認証情報は利用者が明示的に渡します。Google SDKや暗黙のログインは必須にしません。
+読み取りと無料は別であり、取得範囲・欠測・料金未評価を明示します。
+FOCUS対応、実請求額の照合、OAuthログインは今回の再整理では追加していません。
 
-## 管理者向けの読み取り調査
+開発試験はRustのworkspace試験と、`npm --prefix packages/provider-google test`で実行します。
+後者は実Rustバイナリと合成HTTPを使用し、実Cloudには接続しません。
+ソース反映、配布、本番・実アカウント受入は別工程です。
 
-`zix google` から可視プロジェクト・請求先の紐付け・有効API・主要リソース状態を個別に確認できます。[管理者向けガイド](docs/administration.md) にJSONコマンド・権限・部分取得・実請求との違いを整理しています。リソース削除、請求停止、権限付与、有料クエリは実行しません。
-
-Existing billing-export discovery and bounded row reads, plus workload configuration, are documented in [administrator observations](docs/administration.md#existing-billing-exports-and-workload-configuration). No SQL jobs or export setup are performed.
+[License](LICENSE) · [NOTICE](NOTICE) · [Security](SECURITY.md) ·
+[依存更新](docs/dependency-updates.md) · [配布](docs/registry-release.md)

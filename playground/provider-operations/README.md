@@ -1,13 +1,22 @@
-# Isolated google operations playground
+# Synthetic Google operation playground
 
-From `packages/provider-google`, run `npm ci --ignore-scripts`, `npm test`, then `node ../../.github/scripts/provider-consumer.mjs`. The owner CI runs this gate and the OIDC publisher repeats it before publication.
+This demonstrates a real Rust operation planner composed with Crowsi grants and
+fake HTTP, without contacting Google or changing a real account.
 
-The gate packs the real candidate, creates a separate public-registry consumer with empty npm configuration, checks the public types, and exercises read/write, denial, resource binding, credential echo rejection and this runnable public-import example. All accounts, credentials and HTTP state are synthetic. No cloud CLI, host keyring or provider account is accessed.
+```sh
+npm --prefix packages/provider-google ci --ignore-scripts
+npm --prefix packages/provider-google test
+(cd packages/provider-google && node ../../.github/scripts/provider-consumer.mjs)
+```
 
-`demo.mjs` prepares and approves a bounded mutation, observes its fake state using a separately approved read, and refuses replay without reacquiring credentials. The injected fake transport returns the same local object for the sample read; this is not a provider-specific production read-back recipe. Production callers must select the real resource read operation and verify its returned facts independently.
+The independent consumer packs and installs the candidate, supplies its copied
+native executable, checks TypeScript types and runs the write/read-back demo.
+The demo changes synthetic labels with an explicit etag, reads fake state back,
+and verifies that reusing the write grant fails without another credential use.
+Its computed binary hash binds the local synthetic build only; production callers
+must use a release hash verified through their trusted distribution process.
 
-Keep account/resource/action scope, source/package version, grant expiry and revocation, allowed extension catalog, read-back and ambiguous outcome handling in the owner application. Generated code receives an execute port, not approval or credential access. Required permissions are metadata, not a complete IAM observation. The first catalog does not implement complete IAM discovery, normalized invoices or continuous monitoring. Those are future features, not completed by these fixtures.
-
-[日本語](README.ja.md)
-
-The publisher derives the archive/version from the manifest. On retry, an existing version must have exactly the candidate integrity and provenance; it is reused without claiming a new OIDC publication. A mismatch fails closed. Bump the package version for payload changes; do not rewrite an existing release.
+See [the package guide](../../packages/provider-google/README.md) for real owner
+composition. No approval is inferred from this example. Account selection,
+credential acquisition, real remote permissions and operation approval remain with
+the owner. No secret value or real project identifier belongs in the playground.

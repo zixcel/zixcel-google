@@ -1,57 +1,53 @@
 # zixcel-google
 
-Owner-approved Google Cloud project/service read/write operations and scoped permission observations; separate Rust planning API.
+Google Cloud administration for local tools and applications: inspect resources,
+understand billing evidence, and prepare explicit, scoped operations.
+Google-specific behavior has one Rust source of truth. [日本語](README.ja.md)
 
-## Rust planning capabilities
+## Choose an entry point
 
-- Validate the declared integration settings.
-- Inspect a bounded plan and missing prerequisites.
+| Component | Purpose |
+| --- | --- |
+| [google-core](crates/google-core) | Rust observations, validation and HTTP operation plans |
+| [google-cli](crates/google-cli) | `zix-google`, the native extension for [zix](https://github.com/zixcel/cli) |
+| [provider-google](packages/provider-google) | Thin TypeScript adapter: Rust plans + Crowsi approval/HTTP execution |
 
-## Rust planning scope
+Use [the getting-started guide](docs/getting-started.md) for native investigation,
+[the TypeScript guide](packages/provider-google/README.md) for approved operations,
+and [the playground](playground/provider-operations/README.md) for a synthetic
+write/read-back example. Runtime users need a verified native binary, not Rust or
+a Google SDK. The TypeScript adapter currently supports Linux, including WSL.
 
-The current package validates configuration and plans operations. It does not provide a complete live service client.
+## Supported behavior
 
-Package distribution is not activated by this documentation. Use the checked-in source and the declared dependency versions; published availability must be verified separately.
+The native extension provides 21 bounded read commands for IAM, projects, billing
+associations, enabled APIs, selected resource inventory and existing standard or
+detailed billing-export rows. See [administration](docs/administration.md).
+The Rust control catalog also defines project reads/search, enabled-service reads,
+permission tests, billing linkage and etag-bound project label updates. Crowsi
+executes approved TypeScript operations; a Rust plan alone does not execute them.
 
-## Rust planning verification
+No credentials are embedded or automatically selected. Read-only does not mean
+free; resource existence does not prove a charge. Missing permissions, disabled
+APIs, incomplete pages and unassessed pricing remain explicit limitations.
+FOCUS, invoice reconciliation, OAuth login and arbitrary API execution are not
+implemented by this source change. No Cloud setup or paid query is performed.
 
-Install Rust 1.97 or newer and make the declared dependencies available. Run from this repository:
+## Develop and verify
+
+Use the declared Rust toolchain and Node version in owner CI:
 
 ```sh
-cargo test --locked
+cargo test --locked --workspace --all-targets --all-features
+cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+npm --prefix packages/provider-google ci --ignore-scripts
+npm --prefix packages/provider-google test
 ```
 
-## Documentation and source
+The Node tests build and invoke the actual Rust CLI, with synthetic credentials
+and fake HTTP. [Architecture](docs/architecture.md) describes trust boundaries,
+removed scaffolding, version changes and what remains outside source acceptance.
 
-[Usage guide](docs/getting-started.md)
-
-[Examples](examples) · [Implementation and public interfaces](src) · [Verification cases](tests) · [Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [License](LICENSE) · [Attribution notices](NOTICE)
-
-## Local administrator runtime
-
-See [the separate Node provider package](packages/provider-google/README.md)
-for account-bound read/write operations and isolated fake-HTTP tests.
-The existing Rust planning API remains independently scoped.
-
-[Isolated public API playground and owner operation boundaries](playground/provider-operations/README.md) · [日本語](README.ja.md)
-
-[OSS responsibility and source completion](docs/oss-source-contract.md) defines the supported package boundary and required acceptance. It does not declare unexecuted source, distribution or production checks complete.
-
-## Node administrator baseline
-
-The runtime implementation is in `packages/provider-google`. Its README defines the reviewed operation catalog, account/credential scope, permission and billing coverage, source additions, examples and isolated test commands. Rust planning-only packages and presentation packages retain their own scopes; a planning fixture is not proof of an external API effect.
-
-Run the Node runtime package's frozen install and tests from that directory. Source additions are reviewed separately from the currently published immutable version and from live-account acceptance. No provider connection or account change occurs during source tests.
-
-Dependency updates: [repository policy](docs/dependency-updates.md).
-Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
-
-## Native administrator extension
-
-[Google IAM observation](docs/google-admin.md) is available as a separate Rust module and `zix google iam keys inspect` extension. The planning crate and npm library keep their distinct APIs. Native release packages require no local Google SDK; access tokens are supplied externally.
-
-## Administrator inventory
-
-Use the native module through `zix google` to investigate visible projects, billing associations, enabled APIs and selected resource states. [Administration guide](docs/administration.md) explains individual JSON commands, required permissions, incomplete visibility and the difference between inventory and actual charges. No cloud mutations or paid query jobs are performed.
-
-Existing billing-export discovery and bounded row reads, plus workload configuration, are documented in [administrator observations](docs/administration.md#existing-billing-exports-and-workload-configuration). No SQL jobs or export setup are performed.
+[Contribution](CONTRIBUTING.md) · [Security](SECURITY.md) · [Apache-2.0](LICENSE) ·
+[Notices](NOTICE) · [Source contract](docs/oss-source-contract.md) ·
+[Dependency updates](docs/dependency-updates.md) · [Releases](docs/registry-release.md)

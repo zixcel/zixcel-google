@@ -1,9 +1,9 @@
 {
   "name": "@zixcel/provider-google",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "license": "Apache-2.0",
-  "description": "google local administrator operations with one-use Crowsi authorization",
+  "description": "Thin Google Rust-core adapter to Crowsi one-use administrator control",
   "engines": {
     "node": ">=24.15.0 <25"
   },
@@ -39,6 +39,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test test/*.test.mjs",
-    "prepack": "npm test"
+    "prepack": "npm test",
+    "pretest": "cargo build --locked --release --manifest-path ../../Cargo.toml -p zixcel-google-cli --bin zix-google",
+    "prebuild": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true });\""
   }
 }

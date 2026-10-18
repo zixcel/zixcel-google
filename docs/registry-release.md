@@ -23,3 +23,17 @@ open. Bounded reads and partial coverage are reported in the Actions Summary.
 The workflow runs from the default branch. PRs run only synthetic boundary tests
 without issue write permission; they cannot close a stage notice. Run
 `node --test .github/scripts/test_reconcile_stage.mts` locally to check the boundary.
+
+## Native Google workspace
+
+`google/v<google-cli version>` selects the `zixcel-google-cli` manifest and runs
+[release-google.yml](../.github/workflows/release-google.yml) independently of npm.
+It requires successful exact-source main CI, runs workspace tests/Clippy, builds
+Linux musl, packs the extension, documentation and original dependency notices,
+and attests/publishes the exact prepared archive once. Existing releases are
+verified, never overwritten. Historical `google-admin/*` artifacts stay immutable.
+
+The TypeScript 0.2.0 source requires the verified native planner as an explicit
+runtime dependency; it does not download or compile one on package import.
+The Node verification workflow builds it for source/packed consumer tests.
+A new manifest version is a candidate declaration, not permission to publish.

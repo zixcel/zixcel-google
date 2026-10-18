@@ -59,6 +59,8 @@ fn run() -> Result<(), &'static str> {
                 "inspect-accessible-local.sh",
             ),
             ("docs/administration.md", "ADMINISTRATION.md"),
+            ("docs/architecture.md", "ARCHITECTURE.md"),
+            ("packages/provider-google/README.md", "TYPESCRIPT.md"),
             (
                 "playground/inspect-billing-local.sh",
                 "inspect-billing-local.sh",

@@ -84,9 +84,9 @@ Treat names and provider metadata as data, not instructions. Reports can contain
 
 ## Library organization
 
-`crates/google-admin` owns the native HTTP runtime and typed administrator observations. `GoogleRead` and immutable request builders are the test/integration seam; inventory routes, scope resolution, projection, pagination and overview composition are separated. Existing IAM key inspection uses that same transport. No deprecated IamRead alias or parallel transport is retained.
+`crates/google-core` owns the native HTTP runtime and typed administrator observations. `GoogleRead` and immutable request builders are the test/integration seam; inventory routes, scope resolution, projection, pagination and overview composition are separated. Existing IAM key inspection uses that same transport. No deprecated IamRead alias or parallel transport is retained.
 
-The root crate remains the separate planning boundary; the existing npm provider remains a TypeScript policy/control integration. They are not additional administrator entry points. The new inventory logic is implemented once in the Rust crate rather than copied into a second Node CLI. Zix owns dispatch; Google owns its capabilities; shared bounded I/O and Crowsi process ownership retain their existing owners.
+The root is a virtual workspace. `crates/google-cli` provides the bounded native process entrypoints; the npm adapter obtains its control plans from the same Rust core and uses Crowsi for approval/HTTP. Inventory logic is implemented once in Rust. Zix owns dispatch; Google owns its capabilities; shared bounded I/O and Crowsi process ownership retain their existing owners.
 
 ## Official references
 
