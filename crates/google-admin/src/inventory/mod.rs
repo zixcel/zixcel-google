@@ -9,6 +9,6 @@ mod overview;
 mod page;
 pub mod query;
 mod routing;
-mod scope;
+pub(crate) mod scope;
 pub use collect::inspect;
 pub use overview::{Overview, inspect as overview};

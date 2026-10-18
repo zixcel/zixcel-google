@@ -6,6 +6,7 @@ mod discovery;
 mod query;
 mod rows;
 mod schema;
+mod service;
 pub use query::Query;
 pub fn execute(http: &mut impl GoogleRead, query: &Query) -> Result<Value> {
     query.validate()?;

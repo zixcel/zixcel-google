@@ -1,5 +1,8 @@
 use super::*;
 pub(super) fn discover(http: &mut impl GoogleRead, q: &Query, base: &str) -> Result<Value> {
+    if matches!(service::enabled(http, &q.project), Ok(false)) {
+        return Err(Error::ServiceDisabled);
+    }
     let (path, array, reference) = match &q.dataset {
         Some(dataset) => (
             format!("{base}/datasets/{dataset}/tables"),

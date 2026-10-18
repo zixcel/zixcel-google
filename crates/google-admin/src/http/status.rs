@@ -34,12 +34,21 @@ pub(super) fn check(status: u16, body: &[u8]) -> Result<()> {
         403 => Error::Forbidden,
         404 => Error::Unavailable,
         429 => Error::RateLimited,
-        _ => Error::HttpStatus,
+        _ => Error::HttpStatus(status),
     })
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn unknown_http_failures_retain_only_numeric_status_not_private_body() {
+        for status in [400, 402, 500, 503] {
+            let error = check(status, b"SYNTHETIC_PRIVATE_RESPONSE").unwrap_err();
+            assert_eq!(error.http_status(), Some(status));
+            assert_eq!(error.code(), "http_failed");
+            assert!(!error.to_string().contains("SYNTHETIC_PRIVATE_RESPONSE"));
+        }
+    }
     #[test]
     fn only_known_typed_provider_reasons_change_the_static_error_code() {
         for (reason, error) in [
