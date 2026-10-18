@@ -13,7 +13,8 @@ fn run(request: &Request) -> Result<Value> {
         Input::Inventory(q) => q.quota_project(),
         Input::Export(q) => q.quota_project(),
     };
-    let mut http = GoogleHttp::from_env()?;
+    let token = std::env::var("ZIX_GOOGLE_ACCESS_TOKEN").map_err(|_| Error::CredentialMissing)?;
+    let mut http = GoogleHttp::new(&token)?;
     http.limit_time(std::time::Duration::from_millis(request.limits.timeout_ms))?;
     if let Some(project) = quota {
         http.set_quota_project(project)?;

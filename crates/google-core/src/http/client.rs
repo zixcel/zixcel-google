@@ -29,11 +29,6 @@ impl GoogleHttp {
             remaining: 32,
         })
     }
-    pub fn from_env() -> Result<Self> {
-        let token =
-            std::env::var("ZIX_GOOGLE_ACCESS_TOKEN").map_err(|_| Error::CredentialMissing)?;
-        Self::new(&token)
-    }
     pub fn set_quota_project(&mut self, project: &str) -> Result<()> {
         crate::inventory::query::project_identifier(project)?;
         self.quota_project = Some(HeaderValue::from_str(project).map_err(|_| Error::InvalidInput)?);
