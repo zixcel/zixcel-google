@@ -30,6 +30,7 @@ pub struct Response {
 pub(super) enum Input {
     Key(KeyQuery, Option<String>),
     Inventory(InventoryQuery),
+    Export(crate::exports::Query),
 }
 impl Request {
     pub fn validate(&self) -> Result<()> {
@@ -47,6 +48,12 @@ impl Request {
         self.input().map(|_| ())
     }
     pub(super) fn input(&self) -> Result<Input> {
+        if self.operation.starts_with("billing.exports.") {
+            return Ok(Input::Export(crate::exports::Query::parse(
+                &self.operation,
+                &self.arguments,
+            )?));
+        }
         if self.operation != super::OPERATION {
             return Ok(Input::Inventory(InventoryQuery::parse(
                 &self.operation,

@@ -53,3 +53,5 @@ Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
 ## Administrator inventory
 
 Use the native module through `zix google` to investigate visible projects, billing associations, enabled APIs and selected resource states. [Administration guide](docs/administration.md) explains individual JSON commands, required permissions, incomplete visibility and the difference between inventory and actual charges. No cloud mutations or paid query jobs are performed.
+
+Existing billing-export discovery and bounded row reads, plus workload configuration, are documented in [administrator observations](docs/administration.md#existing-billing-exports-and-workload-configuration). No SQL jobs or export setup are performed.

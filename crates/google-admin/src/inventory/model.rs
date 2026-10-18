@@ -1,6 +1,8 @@
 use serde::Serialize;
 #[derive(Clone, Debug, Serialize)]
 pub struct Record {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<super::configuration::Configuration>,
     pub name: String,
     pub kind: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]

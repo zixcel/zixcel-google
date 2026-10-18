@@ -59,6 +59,14 @@ fn run() -> Result<(), &'static str> {
                 "inspect-accessible-local.sh",
             ),
             ("docs/administration.md", "ADMINISTRATION.md"),
+            (
+                "playground/inspect-billing-local.sh",
+                "inspect-billing-local.sh",
+            ),
+            (
+                "playground/billing-export-observations.sh",
+                "billing-export-observations.sh",
+            ),
         ] {
             fs::copy(source, directory.join(name)).map_err(|_| "consumer_documentation_missing")?;
         }

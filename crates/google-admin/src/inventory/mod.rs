@@ -1,5 +1,6 @@
 pub mod catalog;
 mod collect;
+pub mod configuration;
 mod decode;
 pub mod manifest;
 pub mod model;

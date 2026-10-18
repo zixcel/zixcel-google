@@ -2,6 +2,7 @@
 //! Read-only administrator observations. No cloud mutation or secret-key login.
 mod account;
 mod error;
+pub mod exports;
 mod http;
 pub mod inventory;
 mod keys;

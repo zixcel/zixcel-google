@@ -24,6 +24,7 @@ pub(super) fn record(value: &Value, model: Model) -> Result<Record> {
         Model::Run => "run_service",
     };
     let r = Record {
+        configuration: super::configuration::observe(value, model)?,
         name,
         kind,
         state: text(value, "state")?.or(text(value, "status")?),
