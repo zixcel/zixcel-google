@@ -45,3 +45,7 @@ Run the Node runtime package's frozen install and tests from that directory. Sou
 
 Dependency updates: [repository policy](docs/dependency-updates.md).
 Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
+
+## Native administrator extension
+
+[Google IAM observation](docs/google-admin.md) is available as a separate Rust module and `zix google iam keys inspect` extension. The planning crate and npm library keep their distinct APIs. Native release packages require no local Google SDK; access tokens are supplied externally.
