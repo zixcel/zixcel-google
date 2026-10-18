@@ -49,3 +49,7 @@ Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
 ## Native administrator extension
 
 [Google IAM observation](docs/google-admin.md) is available as a separate Rust module and `zix google iam keys inspect` extension. The planning crate and npm library keep their distinct APIs. Native release packages require no local Google SDK; access tokens are supplied externally.
+
+## Administrator inventory
+
+Use the native module through `zix google` to investigate visible projects, billing associations, enabled APIs and selected resource states. [Administration guide](docs/administration.md) explains individual JSON commands, required permissions, incomplete visibility and the difference between inventory and actual charges. No cloud mutations or paid query jobs are performed.

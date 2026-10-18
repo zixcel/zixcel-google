@@ -1,4 +1,4 @@
-use crate::{Error, IamRead, KeyQuery, Result, account::Account};
+use crate::{Error, GoogleRead, KeyQuery, Result, account::Account};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -41,31 +41,27 @@ struct KeyList {
 }
 /// Exactly one service account and its user-managed keys; no key is authenticated or modified.
 pub fn inspect_key(
-    transport: &mut impl IamRead,
+    transport: &mut impl GoogleRead,
     query: &KeyQuery,
     now: DateTime<Utc>,
 ) -> Result<KeyObservation> {
     let path = query.account_path()?;
-    let account: Account = decode(&transport.get(&path).map_err(|error| {
-        if error == Error::Unavailable {
-            Error::AccountUnavailable
-        } else {
-            error
-        }
-    })?)?;
+    let account: Account = decode(
+        &transport
+            .read(&crate::ReadRequest::iam(&path)?)
+            .map_err(Error::at_account)?,
+    )?;
     account.bind(query)?;
     // The immutable account ID prevents an email being deleted/recreated between the two reads.
     let keys_path = format!(
         "/v1/projects/{}/serviceAccounts/{}/keys?keyTypes=USER_MANAGED",
         query.project, account.unique_id
     );
-    let list: KeyList = decode(&transport.get(&keys_path).map_err(|error| {
-        if error == Error::Unavailable {
-            Error::KeyListUnavailable
-        } else {
-            error
-        }
-    })?)?;
+    let list: KeyList = decode(
+        &transport
+            .read(&crate::ReadRequest::iam(&keys_path)?)
+            .map_err(Error::at_key_list)?,
+    )?;
     if list.keys.len() > 100 {
         return Err(Error::InvalidResponse);
     }

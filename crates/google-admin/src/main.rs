@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 use std::{
-    io::{self, Read},
+    io::{self},
     process::ExitCode,
 };
 use zixcel_google_admin::{Error, protocol};
@@ -22,14 +22,7 @@ fn run() -> Result<(), Error> {
     if args != ["--zix-provider-v1"] {
         return Err(Error::Protocol);
     }
-    let mut bytes = Vec::new();
-    io::stdin()
-        .take(65537)
-        .read_to_end(&mut bytes)
-        .map_err(|_| Error::Protocol)?;
-    if bytes.len() > 65536 {
-        return Err(Error::Protocol);
-    }
+    let bytes = zixcel_bounded_io::read_bounded(io::stdin(), 65536).map_err(|_| Error::Protocol)?;
     let request: protocol::Request = serde_json::from_slice(&bytes).map_err(|_| Error::Protocol)?;
     request.validate()?;
     // A failed IAM query is a typed observation failure, never a fabricated revoked state.

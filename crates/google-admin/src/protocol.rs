@@ -1,81 +1,78 @@
-use crate::{Error, GoogleHttp, KeyQuery, Result, inspect_key};
-use serde::{Deserialize, Serialize};
+use crate::{Error, GoogleHttp, Result, inspect_key, inventory};
 use serde_json::{Value, json};
+mod model;
+use model::Input;
+pub use model::{Limits, Request, Response};
 pub const SCHEMA: &str = "zix-provider/v1";
 pub const OPERATION: &str = "iam.keys.inspect";
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Request {
-    pub schema: String,
-    pub id: String,
-    pub operation: String,
-    pub arguments: KeyQuery,
-    pub limits: Limits,
-}
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct Limits {
-    pub timeout_ms: u64,
-    pub maximum_response_bytes: usize,
-}
-#[derive(Serialize)]
-pub struct Response {
-    pub schema: &'static str,
-    pub id: String,
-    pub operation: &'static str,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub result: Option<Value>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<&'static str>,
-}
-impl Request {
-    pub fn validate(&self) -> Result<()> {
-        if self.schema != SCHEMA
-            || self.operation != OPERATION
-            || self.id.len() != 32
-            || !self
-                .id
-                .bytes()
-                .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
-            || !(50..=40000).contains(&self.limits.timeout_ms)
-            || !(1024..=131072).contains(&self.limits.maximum_response_bytes)
-        {
-            return Err(Error::Protocol);
-        }
-        self.arguments.validate()
+fn run(request: &Request) -> Result<Value> {
+    request.validate()?;
+    let input = request.input()?;
+    let quota = match &input {
+        Input::Key(_, q) => q.as_deref(),
+        Input::Inventory(q) => q.quota_project.as_deref(),
+    };
+    let mut http = GoogleHttp::from_env()?;
+    http.limit_time(std::time::Duration::from_millis(request.limits.timeout_ms))?;
+    if let Some(project) = quota {
+        http.set_quota_project(project)?;
     }
+    let value = match input {
+        Input::Key(query, _) => {
+            serde_json::to_value(inspect_key(&mut http, &query, chrono::Utc::now())?)
+        }
+        Input::Inventory(query) if query.operation.starts_with("overview.") => {
+            serde_json::to_value(inventory::overview(&mut http, &query)?)
+        }
+        Input::Inventory(query) => serde_json::to_value(inventory::inspect(&mut http, &query)?),
+    }
+    .map_err(|_| Error::InvalidResponse)?;
+    bounded_value(value, request.limits.maximum_response_bytes)
+}
+fn bounded_value(value: Value, maximum: usize) -> Result<Value> {
+    if serde_json::to_vec(&value)
+        .map_err(|_| Error::InvalidResponse)?
+        .len()
+        + 512
+        > maximum
+    {
+        return Err(Error::ResponseTooLarge);
+    }
+    Ok(value)
 }
 pub fn execute(request: &Request) -> Response {
-    let result = request.validate().and_then(|()| {
-        let mut http = GoogleHttp::from_env()?;
-        http.limit_time(std::time::Duration::from_millis(request.limits.timeout_ms))?;
-        inspect_key(&mut http, &request.arguments, chrono::Utc::now())
-    });
-    match result {
-        Ok(value) => Response {
-            schema: SCHEMA,
-            id: request.id.clone(),
-            operation: OPERATION,
-            result: Some(json!(value)),
-            error: None,
-        },
-        Err(error) => Response {
-            schema: SCHEMA,
-            id: request.id.clone(),
-            operation: OPERATION,
-            result: None,
-            error: Some(error.code()),
-        },
+    let (result, error) = match run(request) {
+        Ok(value) => (Some(value), None),
+        Err(e) => (None, Some(e.code())),
+    };
+    Response {
+        schema: SCHEMA,
+        id: request.id.clone(),
+        operation: request.operation.clone(),
+        result,
+        error,
     }
 }
 pub fn manifest() -> Value {
-    json!({"schema":"zix-extension/v1", "package":"zixcel-google-admin", "version":env!("CARGO_PKG_VERSION"),
-        "namespace":"google", "platform":"linux-x86_64", "protocol":SCHEMA,
-        "credential_environment":["ZIX_GOOGLE_ACCESS_TOKEN"],"timeout_ms":35000,
-        "commands":[{"id":OPERATION,"words":["iam","keys","inspect"],"effect":"read",
-            "description":"Observe one service-account key without using or changing it.",
-            "required_permissions":["iam.serviceAccounts.get","iam.serviceAccountKeys.list"],
-            "arguments":[{"name":"project","required":true,"maximum":30},
-                {"name":"service-account","required":true,"maximum":128},
-                {"name":"key-id","required":true,"maximum":40}]}]})
+    let mut commands = inventory::manifest::commands();
+    commands.push(json!({"id":OPERATION,"words":["iam","keys","inspect"],"effect":"read",
+        "description":"Observe one service-account key without using or changing it.",
+        "required_permissions":["iam.serviceAccounts.get","iam.serviceAccountKeys.list"],
+        "arguments":[{"name":"project","required":true,"maximum":30},{"name":"service-account","required":true,"maximum":128},
+            {"name":"key-id","required":true,"maximum":40},{"name":"quota-project","required":false,"maximum":30}]}));
+    json!({"schema":"zix-extension/v1","package":"zixcel-google-admin","version":env!("CARGO_PKG_VERSION"),"namespace":"google",
+        "platform":"linux-x86_64","protocol":SCHEMA,"credential_environment":["ZIX_GOOGLE_ACCESS_TOKEN"],"timeout_ms":35000,"commands":commands})
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn output_budget_reserves_the_bound_protocol_envelope() {
+        assert!(bounded_value(json!({"records":[]}), 1024).is_ok());
+        assert_eq!(
+            bounded_value(json!({"name":"x".repeat(1024)}), 1024).unwrap_err(),
+            Error::ResponseTooLarge
+        );
+    }
 }

@@ -63,7 +63,15 @@ fn bounded_input_and_manifest_declare_only_the_implemented_read_operation() {
         .unwrap();
     assert!(out.status.success());
     let m: Value = serde_json::from_slice(&out.stdout).unwrap();
-    assert_eq!(m["commands"].as_array().unwrap().len(), 1);
+    assert_eq!(m["commands"].as_array().unwrap().len(), 19);
+    assert!(
+        m["commands"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|c| c["effect"] == "read")
+    );
+    assert!(serde_json::to_vec(&m).unwrap().len() <= 16384);
     assert_eq!(m["commands"][0]["effect"], "read");
     assert_eq!(
         m["credential_environment"],
