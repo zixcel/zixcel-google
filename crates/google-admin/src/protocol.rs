@@ -43,9 +43,9 @@ fn bounded_value(value: Value, maximum: usize) -> Result<Value> {
     Ok(value)
 }
 pub fn execute(request: &Request) -> Response {
-    let (result, error) = match run(request) {
-        Ok(value) => (Some(value), None),
-        Err(e) => (None, Some(e.code())),
+    let (result, error, http_status) = match run(request) {
+        Ok(value) => (Some(value), None, None),
+        Err(e) => (None, Some(e.code()), e.http_status()),
     };
     Response {
         schema: SCHEMA,
@@ -53,6 +53,7 @@ pub fn execute(request: &Request) -> Response {
         operation: request.operation.clone(),
         result,
         error,
+        http_status,
     }
 }
 pub fn manifest() -> Value {

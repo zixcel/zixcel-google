@@ -45,8 +45,8 @@ fn http_statuses_and_redirect_are_not_retried_or_converted_to_key_state() {
         (403, Error::Forbidden),
         (404, Error::Unavailable),
         (429, Error::RateLimited),
-        (500, Error::HttpStatus),
-        (302, Error::HttpStatus),
+        (500, Error::HttpStatus(500)),
+        (302, Error::HttpStatus(302)),
     ] {
         assert_eq!(
             exchange(

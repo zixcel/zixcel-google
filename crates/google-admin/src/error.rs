@@ -13,7 +13,7 @@ pub enum Error {
     ProjectUnavailable,
     KeyListUnavailable,
     RateLimited,
-    HttpStatus,
+    HttpStatus(u16),
     ServiceDisabled,
     ScopeInsufficient,
     QuotaProjectUnavailable,
@@ -23,6 +23,16 @@ pub enum Error {
     Protocol,
 }
 impl Error {
+    pub fn http_status(self) -> Option<u16> {
+        match self {
+            Self::Unauthorized => Some(401),
+            Self::Forbidden => Some(403),
+            Self::Unavailable => Some(404),
+            Self::RateLimited => Some(429),
+            Self::HttpStatus(status) => Some(status),
+            _ => None,
+        }
+    }
     pub(crate) fn at_project(self) -> Self {
         if self == Self::Unavailable {
             Self::ProjectUnavailable
@@ -58,7 +68,7 @@ impl Error {
             Self::ProjectUnavailable => "project_unavailable",
             Self::KeyListUnavailable => "key_list_unavailable",
             Self::RateLimited => "rate_limited",
-            Self::HttpStatus => "http_failed",
+            Self::HttpStatus(_) => "http_failed",
             Self::ServiceDisabled => "service_disabled",
             Self::ScopeInsufficient => "oauth_scope_insufficient",
             Self::QuotaProjectUnavailable => "quota_project_unavailable",

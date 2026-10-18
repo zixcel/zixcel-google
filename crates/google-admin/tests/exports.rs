@@ -17,6 +17,13 @@ impl GoogleRead for Fake {
     }
 }
 fn invoke(operation: &str, args: &[(&str, &str)], replies: Vec<Value>) -> (Result<Value>, Fake) {
+    let replies = if operation == "billing.exports.discover" {
+        vec![json!({"name":"projects/123456789012","projectId":"sample-project"}),
+            json!({"name":"projects/123456789012/services/bigquery.googleapis.com","state":"ENABLED"})]
+            .into_iter().chain(replies).collect()
+    } else {
+        replies
+    };
     let mut fake = Fake {
         replies: replies.into(),
         urls: vec![],
@@ -39,7 +46,7 @@ fn discovery_binds_dataset_scopes_filters_non_billing_tables_and_reports_paging(
     );
     let v = v.unwrap();
     assert_eq!(v["coverage"]["complete"], false);
-    assert!(f.urls[0].starts_with(
+    assert!(f.urls.last().unwrap().starts_with(
         "https://bigquery.googleapis.com/bigquery/v2/projects/sample-project/datasets?"
     ));
     let (v, _) = invoke(

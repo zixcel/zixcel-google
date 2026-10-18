@@ -19,6 +19,8 @@ pub struct Limits {
 }
 #[derive(Serialize)]
 pub struct Response {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub http_status: Option<u16>,
     pub schema: &'static str,
     pub id: String,
     pub operation: String,
