@@ -17,6 +17,11 @@ jobs:
       - name: Install declared Rust toolchain
         run: rustup toolchain install 1.97 --profile minimal
       - name: Test default features
-        run: cargo +1.97 test --locked
+        run: cargo +1.97 test --locked --workspace
       - name: Test all features
-        run: cargo +1.97 test --locked --all-features
+        run: cargo +1.97 test --locked --workspace --all-features
+      - name: Verify formatting and static analysis
+        run: |
+          rustup component add rustfmt clippy --toolchain 1.97
+          cargo +1.97 fmt --all --check
+          cargo +1.97 clippy --locked --workspace --all-targets --all-features -- -D warnings

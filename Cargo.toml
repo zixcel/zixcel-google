@@ -14,7 +14,7 @@ boundary = "planning-only"
 external-actions = false
 
 [workspace]
-members = ["."]
+members = [".", "crates/google-admin"]
 resolver = "3"
 
 [dependencies]
@@ -28,3 +28,6 @@ unsafe_code = "forbid"
 
 [lints.clippy]
 all = "warn"
+
+[profile.release]
+strip = "debuginfo"

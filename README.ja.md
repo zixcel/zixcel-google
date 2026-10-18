@@ -8,3 +8,7 @@ provider固有のaccount/resource mappingと必要権限・副作用を持つ汎
 
 Dependency updates: [repository policy](docs/dependency-updates.md).
 Registry releases: [version tags and GitHub OIDC](docs/registry-release.md).
+
+## Native管理extension
+
+[Google IAM観測module](docs/google-admin.md) は独立したRust moduleとして `zix google iam keys inspect` を提供します。既存planning crate・npm libraryのAPIとは区別し、ローカルのGoogle SDKを必須にしません。
