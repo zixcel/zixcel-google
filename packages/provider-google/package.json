@@ -42,5 +42,15 @@
     "prepack": "npm test",
     "pretest": "cargo build --locked --release --manifest-path ../../Cargo.toml -p zixcel-google-cli --bin zix-google",
     "prebuild": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true });\""
-  }
+  },
+  "keywords": [
+    "ai-agents",
+    "llm",
+    "google-cloud",
+    "cloud-administration",
+    "cli",
+    "automation",
+    "local-first",
+    "rust"
+  ]
 }
