@@ -1,6 +1,6 @@
 [package]
 name = "zixcel-google-cli"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2024"
 rust-version = "1.97"
 description = "Native Google provider entrypoint for zix and TypeScript consumers"
