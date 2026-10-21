@@ -13,8 +13,9 @@ const run = (command, args, cwd = project) => {
  catch (error) { throw new Error(`${command} failed: ${String(error.stdout ?? '').slice(-1600)} ${String(error.stderr ?? '').slice(-1600)}`) }
 }
 try {
- copyFileSync(resolve(root, '../../target/release/zix-google'), env.ZIX_GOOGLE_TEST_BINARY)
- copyFileSync(resolve(root, 'test/native-support.mjs'), join(project, 'native-support.mjs'))
+ if (!process.env.ZIX_GOOGLE_TEST_BINARY || !process.env.ZIX_GOOGLE_TEST_SHA256) throw new Error('Select an explicitly verified native artifact')
+ copyFileSync(process.env.ZIX_GOOGLE_TEST_BINARY, env.ZIX_GOOGLE_TEST_BINARY)
+ copyFileSync(resolve(root, 'test/native-support.mts'), join(project, 'native-support.mts'))
  writeFileSync(env.NPM_CONFIG_USERCONFIG, ''); writeFileSync(env.NPM_CONFIG_GLOBALCONFIG, '')
  const packed = JSON.parse(run('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', project], root))
  const rows = Array.isArray(packed) ? packed : Object.values(packed)

@@ -20,6 +20,15 @@ jobs:
       - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249
         with:
           toolchain: 1.97.1
+      - name: Explicitly build the synthetic-test native dependency
+        env:
+          CARGO_BUILD_JOBS: '2'
+          CARGO_INCREMENTAL: '0'
+          CARGO_PROFILE_RELEASE_DEBUG: '0'
+        run: |
+          cargo build --locked --release -p zixcel-google-cli --bin zix-google
+          echo "ZIX_GOOGLE_TEST_BINARY=$GITHUB_WORKSPACE/target/release/zix-google" >> "$GITHUB_ENV"
+          echo "ZIX_GOOGLE_TEST_SHA256=$(sha256sum target/release/zix-google | cut -d ' ' -f 1)" >> "$GITHUB_ENV"
       - name: Test isolated account read/write fixtures
         working-directory: packages/provider-google
         run: |

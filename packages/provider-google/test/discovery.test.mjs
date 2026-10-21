@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { describeService, createNativePlanner } from '../dist/index.mjs'
-import { selection } from './native-support.mjs'
+import { selection } from './native-support.mts'
 const planner = createNativePlanner(selection), serviceProfile = describeService(planner), operations = planner.catalog.operations
 test('public service profile exposes declarations without callbacks or claimed observed permissions', () => {
   assert.equal(serviceProfile.permissionState, 'not-observed')

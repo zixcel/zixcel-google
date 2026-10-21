@@ -59,12 +59,24 @@ The caller owns receipt provenance; these are not signed authorization records.
 
 ```sh
 npm ci --ignore-scripts
+# Select a separately built or downloaded native artifact and its verified checksum.
+export ZIX_GOOGLE_TEST_BINARY=/absolute/path/to/zix-google
+export ZIX_GOOGLE_TEST_SHA256=replace_with_verified_64_character_sha256
 npm test
 node ../../.github/scripts/provider-consumer.mjs
 ```
 
-`npm test` builds the actual Rust CLI, then exercises it using synthetic accounts
-and fake HTTP. The independent consumer tests the packed npm artifact and a copied
+`npm test` never builds or downloads native code. It refuses a missing selection,
+checksum mismatch, symlink, non-regular file or oversized native artifact before
+running synthetic accounts and fake HTTP tests. Artifact hashing uses a bounded
+64 KiB buffer. A checksum identifies the selected bytes; verify their provenance
+separately before selecting them.
+
+The owner CI explicitly builds the Rust CLI first with two Cargo jobs and no
+incremental/debug artifacts. For a deliberate local build, use
+`CARGO_BUILD_JOBS=1 CARGO_INCREMENTAL=0 cargo build --locked --release -p zixcel-google-cli --bin zix-google`
+from the repository root, within your own resource limits, then select the binary
+and its independently verified SHA256. Building is never an npm lifecycle hook. The independent consumer tests the packed npm artifact and a copied
 native executable. No real credential or Cloud account is used. Release and live
 acceptance are separate. The previous implicit gcloud helper, duplicate request
 builders and arbitrary extension catalog are removed; callers must adopt the

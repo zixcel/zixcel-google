@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync, symlinkSync, copyFileSync, chmodSync, rmSyn
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createControl, createNativePlanner } from '../dist/index.mjs'
-import { selection } from './native-support.mjs'
+import { selection } from './native-support.mts'
 const account = { provider: 'google-cloud', subject: 'synthetic-owner', account: '1234567890' }
 test('native selection rejects PATH, digest substitution, scripts, symlinks and writable executables', () => {
   assert.throws(() => createNativePlanner({ executable: 'zix-google', sha256: selection.sha256 }))

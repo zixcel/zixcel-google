@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createControl, observeTestedPermissions, createNativePlanner } from '../dist/index.mjs'
-import { selection } from './native-support.mjs'
+import { selection } from './native-support.mts'
 const planner = createNativePlanner(selection)
 const account = { provider: 'google-cloud', account: '1234567890', subject: 'synthetic-owner' }
 async function observed() {

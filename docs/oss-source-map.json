@@ -137,10 +137,10 @@
       },
       "declared_commands": {
         "build": "tsc -p tsconfig.json",
-        "test": "npm run build && node --test test/*.test.mjs",
+        "test": "npm run build && npm run test:types && node --test test/*.test.mjs test/*.test.mts",
         "prepack": "npm test",
-        "pretest": "cargo build --locked --release --manifest-path ../../Cargo.toml -p zixcel-google-cli --bin zix-google",
-        "prebuild": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true });\""
+        "prebuild": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true });\"",
+        "test:types": "tsc -p tsconfig.test.json"
       }
     }
   ],
@@ -177,7 +177,8 @@
     "packages/provider-google/test/control.test.mjs",
     "packages/provider-google/test/discovery.test.mjs",
     "packages/provider-google/test/native-boundary.test.mjs",
-    "packages/provider-google/test/native-support.mjs",
+    "packages/provider-google/test/native-selection.test.mts",
+    "packages/provider-google/test/native-support.mts",
     "packages/provider-google/test/permission-observation.test.mjs"
   ],
   "example_sources": [
