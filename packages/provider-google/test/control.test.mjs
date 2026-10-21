@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createControl, createNativePlanner } from '../dist/index.mjs'
-import { selection } from './native-support.mjs'
+import { selection } from './native-support.mts'
 const planner = createNativePlanner(selection), operations = planner.catalog.operations
 const account = { provider: "google-cloud", subject: 'synthetic-owner', account: '1234567890' }
 const samples = {"billing.project-read":{},"account.read":{},"permissions.test":{"permissions":["resourcemanager.projects.get"]},"project.set-labels":{"labels":{"env":"test"},"etag":"synthetic-etag"},"accounts.search":{"pageToken":null},"services.list":{"pageToken":null}}
