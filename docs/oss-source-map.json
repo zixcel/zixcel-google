@@ -200,7 +200,145 @@
       "path": ".github/workflows/provider-control.yml"
     },
     {
-      "path": ".github/workflows/publish-npm.yml"
+      "path": ".github/workflows/publish-npm.yml",
+      "jobs": [
+        {
+          "job": "contract",
+          "condition": null,
+          "runs_on": "ubuntu-24.04",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": "python3 .github/scripts/test_release_plan.py\npython3 .github/scripts/test_archive_binding.py\npython3 .github/scripts/test_stage_notification.py\n",
+              "uses": null,
+              "condition": null
+            }
+          ]
+        },
+        {
+          "job": "prepare",
+          "condition": "github.event_name != 'pull_request' && github.ref_type == 'tag' && github.event.repository.private == false",
+          "runs_on": "ubuntu-24.04",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "condition": null
+            },
+            {
+              "name": "Admit the exact tag and successful default-branch CI",
+              "run": "python3 .github/scripts/release_plan.py npm",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": "npm install --global --ignore-scripts npm@12.2.0 pnpm@10.29.3",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Build and pack the selected package without publication identity",
+              "run": "set -euo pipefail\nif test -f \"$INSTALL_DIRECTORY/pnpm-lock.yaml\"; then\n  pnpm --dir \"$INSTALL_DIRECTORY\" install --frozen-lockfile --ignore-scripts\n  pnpm --dir \"$INSTALL_DIRECTORY\" -r --include-workspace-root --if-present run build\nelif test -f \"$INSTALL_DIRECTORY/package-lock.json\"; then\n  npm --prefix \"$INSTALL_DIRECTORY\" ci --ignore-scripts\n  npm --prefix \"$INSTALL_DIRECTORY\" run build --if-present\nelse\n  echo 'A committed dependency lock is required'; exit 1\nfi\ngit diff --exit-code\nmkdir -p \"$RUNNER_TEMP/npm-release\"\nif test -f \"$INSTALL_DIRECTORY/pnpm-lock.yaml\"; then\n  npm_config_ignore_scripts=true pnpm --dir \"$PACKAGE_DIRECTORY\" pack --pack-destination \"$RUNNER_TEMP/npm-release\"\nelse\n  (cd \"$PACKAGE_DIRECTORY\" && npm pack --ignore-scripts --json --workspaces=false --pack-destination \"$RUNNER_TEMP/npm-release\")\nfi\n",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Bind archive identity and digest",
+              "run": "python3 .github/scripts/archive_binding.py prepare npm \"$RUNNER_TEMP/npm-release\"",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+              "condition": null
+            }
+          ]
+        },
+        {
+          "job": "publish",
+          "condition": "vars.REGISTRY_PUBLISH_ENABLED == 'true'",
+          "runs_on": "ubuntu-24.04",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": "npm install --global --ignore-scripts npm@12.2.0",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
+              "condition": null
+            },
+            {
+              "name": "Verify the exact prepared archive",
+              "run": "python3 .github/scripts/archive_binding.py verify npm \"$RUNNER_TEMP/npm-release\"",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Publish through the repository Trusted Publisher",
+              "run": "set -euo pipefail\nif test \"$PUBLICATION_MODE\" = direct; then\n  npm publish \"$RUNNER_TEMP/npm-release/$ARCHIVE_NAME\" --access public --provenance --ignore-scripts --registry=https://registry.npmjs.org\n  python3 .github/scripts/archive_binding.py registry npm \"$RUNNER_TEMP/npm-release\"\nelif test -z \"$PUBLICATION_MODE\" || test \"$PUBLICATION_MODE\" = stage; then\n  npm stage publish \"$RUNNER_TEMP/npm-release/$ARCHIVE_NAME\" --access public --provenance --ignore-scripts --json --registry=https://registry.npmjs.org > \"$RUNNER_TEMP/npm-stage-response.json\"\n  python3 .github/scripts/stage_notification.py \"$RUNNER_TEMP/npm-release\" \"$RUNNER_TEMP/npm-stage-response.json\"\n  rm -f \"$RUNNER_TEMP/npm-stage-response.json\"\nelse\n  echo 'Unknown NPM_PUBLICATION_MODE'; exit 1\nfi\ncat \"$RUNNER_TEMP/npm-release/release-receipt.json\" >> \"$GITHUB_STEP_SUMMARY\"\n",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+              "condition": "steps.publication.outputs.stage-id != ''"
+            }
+          ]
+        },
+        {
+          "job": "notify",
+          "condition": "needs.publish.outputs.stage-id != ''",
+          "runs_on": "ubuntu-24.04",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
+              "condition": null
+            },
+            {
+              "name": "Notify the owner issue queue without npm credentials or approval authority",
+              "run": "set -euo pipefail\ncount=$(gh issue list --repo \"$GITHUB_REPOSITORY\" --state all --search \"$STAGE_ID in:body\" --json number --jq 'length')\nif test \"$count\" = 0; then\n  gh issue create --repo \"$GITHUB_REPOSITORY\" --title \"[npm stage] Review $STAGE_ID\" --body-file \"$RUNNER_TEMP/npm-stage-notice/notice.md\"\nfi\ncat \"$RUNNER_TEMP/npm-stage-notice/notice.md\" >> \"$GITHUB_STEP_SUMMARY\"\n",
+              "uses": null,
+              "condition": null
+            }
+          ]
+        }
+      ]
     },
     {
       "path": ".github/workflows/publish-provider.yml"
