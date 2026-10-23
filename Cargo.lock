@@ -1490,8 +1490,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "zixcel-cost"
+version = "0.11.0"
+source = "git+https://github.com/zixcel/zixcel-cost?rev=dbc47f23eb4437365ac7c6e70600a5185d39141d#dbc47f23eb4437365ac7c6e70600a5185d39141d"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "zixcel-google-cli"
-version = "0.4.1"
+version = "0.5.0"
 dependencies = [
  "chrono",
  "serde",
@@ -1503,7 +1513,7 @@ dependencies = [
 
 [[package]]
 name = "zixcel-google-core"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "chrono",
  "reqwest",
@@ -1511,6 +1521,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "zixcel-bounded-io",
+ "zixcel-cost",
 ]
 
 [[package]]

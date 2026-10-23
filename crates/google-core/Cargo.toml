@@ -1,6 +1,6 @@
 [package]
 name = "zixcel-google-core"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2024"
 rust-version = "1.97"
 description = "Google resource observations and scoped operation planning"
@@ -9,6 +9,7 @@ repository = "https://github.com/zixcel/zixcel-google"
 publish = false
 
 [dependencies]
+zixcel-cost = { git = "https://github.com/zixcel/zixcel-cost", rev = "dbc47f23eb4437365ac7c6e70600a5185d39141d", version = "=0.11.0" }
 zixcel-bounded-io = { git = "https://github.com/zixcel/zixcel-contracts", rev = "24a7ec9e328987d931cf49dd97ca23a6ae50db2f" }
 sha2 = "0.11"
 serde = { version = "1.0", features = ["derive"] }
