@@ -214,6 +214,28 @@ fn period_currency_precision_and_source_scope_are_explicit_not_inferred() {
     assert!(http.paths.is_empty());
 }
 #[test]
+fn same_billing_account_cannot_substitute_another_export_source() {
+    let mut args = args()
+        .into_iter()
+        .map(|(k, v)| (k.to_owned(), v.to_owned()))
+        .collect::<BTreeMap<_, _>>();
+    args.insert("dataset".into(), "other_billing".into());
+    let other_query = Query::parse("billing.exports.read", &args).unwrap();
+    let mut transport = wire(page(), "r1");
+    let mut other_metadata = metadata();
+    other_metadata["etag"] = json!("r1");
+    other_metadata["tableReference"]["datasetId"] = json!("other_billing");
+    transport.replies[0] = serde_json::to_vec(&other_metadata).unwrap();
+    transport.replies[2] = serde_json::to_vec(&other_metadata).unwrap();
+    let other = read_usage(&mut transport, &other_query, &selection()).unwrap();
+    let mut m = monitor();
+    assert_eq!(
+        m.observe(&other, selection().observed_at_ms),
+        Err(BillingError::InvalidObservation)
+    );
+    assert_eq!(m.observations(), 0);
+}
+#[test]
 fn real_decoder_retains_authorization_errors_without_calling_them_zero_cost() {
     struct Denied;
     impl GoogleRead for Denied {
