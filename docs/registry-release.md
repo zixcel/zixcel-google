@@ -33,7 +33,7 @@ Linux musl, packs the extension, documentation and original dependency notices,
 and attests/publishes the exact prepared archive once. Existing releases are
 verified, never overwritten. Historical `google-admin/*` artifacts stay immutable.
 
-The TypeScript 0.2.0 source requires the verified native planner as an explicit
+The TypeScript 0.3.0 source requires the verified native planner as an explicit
 runtime dependency; it does not download or compile one on package import.
 The Node verification workflow builds it for source/packed consumer tests.
 A new manifest version is a candidate declaration, not permission to publish.

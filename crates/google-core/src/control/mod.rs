@@ -5,5 +5,5 @@ mod input;
 mod plan;
 pub use catalog::{Operation, catalog};
 pub use input::{Account, Request};
-pub use plan::{Prepared, prepare};
+pub use plan::{HttpRequest, Prepared, prepare};
 pub const SCHEMA: &str = "zix-google-control/v1";

@@ -9,7 +9,7 @@ pub struct Account {
     pub account: String,
 }
 impl Account {
-    pub(super) fn validate(&self) -> Result<()> {
+    pub(crate) fn validate(&self) -> Result<()> {
         if self.provider != "google-cloud"
             || self.subject.is_empty()
             || self.subject.len() > 256

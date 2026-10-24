@@ -1,6 +1,6 @@
 [package]
 name = "zixcel-google-cli"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2024"
 rust-version = "1.97"
 description = "Native Google provider entrypoint for zix and TypeScript consumers"
@@ -17,7 +17,7 @@ name = "zix-google-package"
 path = "../../tools/native-release/main.rs"
 
 [dependencies]
-zixcel-google-core = { path = "../google-core", version = "0.5.0" }
+zixcel-google-core = { path = "../google-core", version = "0.6.0" }
 zixcel-bounded-io = { git = "https://github.com/zixcel/zixcel-contracts", rev = "24a7ec9e328987d931cf49dd97ca23a6ae50db2f" }
 sha2 = "0.11"
 serde = { version = "1.0", features = ["derive"] }

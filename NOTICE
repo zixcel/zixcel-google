@@ -5,3 +5,7 @@ The current distribution is offered under Apache-2.0.
 Previously granted permissions are not revoked. Existing third-party
 notices and any earlier license files remain applicable to their portions.
 External dependencies and service trademarks are not relicensed by this work.
+
+Selected Google API descriptions embedded in lifecycle plans are attributed in
+api/NOTICE (also shipped as GOOGLE-API-NOTICE); Google documentation retains its
+upstream terms. First-party code remains Apache-2.0.

@@ -1,0 +1,24 @@
+{
+  "schema": "zix-api-review/v1",
+  "source_sha256": "63fc796eee1762091e28d0050791dc3e38059c306925370f8e62997f7cb52676",
+  "source_uri": "https://www.googleapis.com/discovery/v1/apis/compute/v1/rest",
+  "format": "discovery",
+  "operations": [
+    {
+      "id": "compute.instances.get",
+      "binding": null
+    },
+    {
+      "id": "compute.instances.stop",
+      "binding": null
+    },
+    {
+      "id": "compute.instances.delete",
+      "binding": null
+    },
+    {
+      "id": "compute.zoneOperations.get",
+      "binding": null
+    }
+  ]
+}

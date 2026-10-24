@@ -6,7 +6,6 @@
     "allowImportingTsExtensions": true
   },
   "include": [
-    "test/native-support.mts",
-    "test/native-selection.test.mts"
+    "test/*.mts"
   ]
 }

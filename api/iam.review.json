@@ -1,0 +1,32 @@
+{
+  "schema": "zix-api-review/v1",
+  "source_sha256": "ad8aa647feb0fed093572e34a80b2215f66b7dfd9ff0219ed72cd4c3c779702a",
+  "source_uri": "https://iam.googleapis.com/$discovery/rest?version=v1",
+  "format": "discovery",
+  "operations": [
+    {
+      "id": "iam.projects.serviceAccounts.get",
+      "binding": null
+    },
+    {
+      "id": "iam.projects.serviceAccounts.disable",
+      "binding": null
+    },
+    {
+      "id": "iam.projects.serviceAccounts.delete",
+      "binding": null
+    },
+    {
+      "id": "iam.projects.serviceAccounts.keys.get",
+      "binding": null
+    },
+    {
+      "id": "iam.projects.serviceAccounts.keys.disable",
+      "binding": null
+    },
+    {
+      "id": "iam.projects.serviceAccounts.keys.delete",
+      "binding": null
+    }
+  ]
+}

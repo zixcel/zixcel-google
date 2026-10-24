@@ -22,3 +22,5 @@ export function describeService(planner: GooglePlanner) {
     billingCoverage: 'Billing linkage is not spend or an invoice.', operations: planner.catalog.operations })
 }
 export { observeTestedPermissions } from './permission-observation.mjs'
+export { createLifecyclePlanner } from './lifecycle.mjs'
+export type { LifecycleTarget, LifecycleRequest, LifecycleEvidence, LifecycleReconciliation, LifecycleState, LifecyclePlan } from './lifecycle.mjs'

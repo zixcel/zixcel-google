@@ -4,7 +4,7 @@ use std::{
     process::ExitCode,
 };
 use zixcel_google_cli::protocol;
-use zixcel_google_core::{Error, control};
+use zixcel_google_core::{Error, control, lifecycle};
 fn main() -> ExitCode {
     match run() {
         Ok(()) => ExitCode::SUCCESS,
@@ -22,6 +22,26 @@ fn run() -> Result<(), Error> {
     }
     if args == ["--control-manifest"] {
         println!("{}", control::catalog());
+        return Ok(());
+    }
+    if args == ["--lifecycle-manifest"] {
+        println!("{}", lifecycle::catalog());
+        return Ok(());
+    }
+    if args == ["--prepare-lifecycle-v1"] || args == ["--reconcile-lifecycle-v1"] {
+        let bytes =
+            zixcel_bounded_io::read_bounded(io::stdin(), 65536).map_err(|_| Error::Protocol)?;
+        let value = if args == ["--prepare-lifecycle-v1"] {
+            serde_json::to_value(lifecycle::prepare(
+                serde_json::from_slice(&bytes).map_err(|_| Error::Protocol)?,
+            )?)
+        } else {
+            serde_json::to_value(lifecycle::reconcile(
+                serde_json::from_slice(&bytes).map_err(|_| Error::Protocol)?,
+            )?)
+        }
+        .map_err(|_| Error::Protocol)?;
+        println!("{value}");
         return Ok(());
     }
     if args == ["--prepare-control-v1"] {

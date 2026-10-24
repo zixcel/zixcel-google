@@ -71,6 +71,13 @@
               "test"
             ],
             "source": "crates/google-core/tests/resource_diagnostics.rs"
+          },
+          {
+            "name": "lifecycle",
+            "kind": [
+              "test"
+            ],
+            "source": "crates/google-core/tests/lifecycle.rs"
           }
         ]
       },
@@ -350,5 +357,13 @@
       "path": ".github/workflows/release-google.yml"
     }
   ],
-  "evidence_policy": "Declarations are not executed acceptance. Match CI and artifact evidence to exact source; publication and real-account acceptance remain separate."
+  "evidence_policy": "Declarations are not executed acceptance. Match CI and artifact evidence to exact source; publication and real-account acceptance remain separate.",
+  "google_lifecycle": {
+    "source": "crates/google-core/src/lifecycle/mod.rs",
+    "typescript": "packages/provider-google/src/lifecycle.mts",
+    "upstream": "api/sources.lock.json",
+    "policy": "api/operations.json",
+    "documentation": "docs/api-lifecycle.md",
+    "authority": "none; planning/evidence classification only"
+  }
 }
