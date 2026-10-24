@@ -42,7 +42,7 @@ planner is removed; there is no fallback path that bypasses the new core.
 - [Repository policy](../.github/workflows/oss-policy.yml)
 - [Native release](../.github/workflows/release-google.yml)
 - [npm tag release](../.github/workflows/publish-npm.yml)
-- [Explicit reviewed npm publication](../.github/workflows/publish-provider.yml)
+- [Reviewed npm stage publication](../.github/workflows/publish-npm.yml)
 
 [Architecture](architecture.md), [source map](oss-source-map.json),
 [administration](administration.md) and [playground](../playground/provider-operations/README.md)

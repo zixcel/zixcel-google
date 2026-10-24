@@ -348,9 +348,6 @@
       ]
     },
     {
-      "path": ".github/workflows/publish-provider.yml"
-    },
-    {
       "path": ".github/workflows/reconcile-npm-stages.yml"
     },
     {

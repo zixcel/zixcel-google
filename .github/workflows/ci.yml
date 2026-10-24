@@ -27,6 +27,7 @@ jobs:
           cargo +1.97 clippy --locked --workspace --all-targets --all-features -- -D warnings
 
   footprint:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
