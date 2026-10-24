@@ -9,7 +9,7 @@ repository = "https://github.com/zixcel/zixcel-google"
 publish = false
 
 [dependencies]
-zixcel-cost = { git = "https://github.com/zixcel/zixcel-cost", rev = "dbc47f23eb4437365ac7c6e70600a5185d39141d", version = "=0.11.0" }
+zixcel-cost = "=0.11.0"
 zixcel-bounded-io = { git = "https://github.com/zixcel/zixcel-contracts", rev = "24a7ec9e328987d931cf49dd97ca23a6ae50db2f" }
 sha2 = "0.11"
 serde = { version = "1.0", features = ["derive"] }

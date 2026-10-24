@@ -1492,7 +1492,8 @@ dependencies = [
 [[package]]
 name = "zixcel-cost"
 version = "0.11.0"
-source = "git+https://github.com/zixcel/zixcel-cost?rev=dbc47f23eb4437365ac7c6e70600a5185d39141d#dbc47f23eb4437365ac7c6e70600a5185d39141d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e024aabf3b069507b218070f63ff04a499a79d0de8a2505ffea478adac880d26"
 dependencies = [
  "serde",
  "serde_json",
