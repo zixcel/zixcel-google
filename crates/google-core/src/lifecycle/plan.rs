@@ -48,7 +48,10 @@ pub struct Plan {
     pub atomic_identity_precondition: bool,
 }
 pub(super) fn hash(bytes: &[u8]) -> String {
-    format!("{:x}", Sha256::digest(bytes))
+    Sha256::digest(bytes)
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect()
 }
 pub fn catalog() -> Value {
     json!({"schema":super::SCHEMA,"plan_only":true,"approval_required":true,
