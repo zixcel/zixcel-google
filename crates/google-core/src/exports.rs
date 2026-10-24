@@ -7,7 +7,9 @@ mod query;
 mod rows;
 mod schema;
 mod service;
+mod usage;
 pub use query::Query;
+pub use usage::{UsageError, UsageSelection, read_usage, usage_scope};
 pub fn execute(http: &mut impl GoogleRead, query: &Query) -> Result<Value> {
     query.validate()?;
     let path = format!("/bigquery/v2/projects/{}", query.project);

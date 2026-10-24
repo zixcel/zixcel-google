@@ -51,3 +51,5 @@ removed scaffolding, version changes and what remains outside source acceptance.
 [Contribution](CONTRIBUTING.md) · [Security](SECURITY.md) · [Apache-2.0](LICENSE) ·
 [Notices](NOTICE) · [Source contract](docs/oss-source-contract.md) ·
 [Dependency updates](docs/dependency-updates.md) · [Releases](docs/registry-release.md)
+
+The Rust source API can pass existing export bytes through provider-specific normalization into the shared bounded usage monitor; see [usage cost observations](docs/usage-cost-observations.md). Usage evidence remains separate from issued invoices and payment evidence.
