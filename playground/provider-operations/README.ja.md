@@ -6,7 +6,7 @@ Rustの実バイナリで操作要求を組み立て、Crowsiの承認・一回�
 ```sh
 npm --prefix packages/provider-google ci --ignore-scripts
 npm --prefix packages/provider-google test
-(cd packages/provider-google && node ../../.github/scripts/provider-consumer.mjs)
+(cd packages/provider-google && node ../../.github/scripts/provider-consumer.mts)
 ```
 
 独立consumerはnpm候補をpack・展開し、コピーしたネイティブバイナリと公開APIを使います。

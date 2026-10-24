@@ -63,7 +63,7 @@ npm ci --ignore-scripts
 export ZIX_GOOGLE_TEST_BINARY=/absolute/path/to/zix-google
 export ZIX_GOOGLE_TEST_SHA256=replace_with_verified_64_character_sha256
 npm test
-node ../../.github/scripts/provider-consumer.mjs
+node ../../.github/scripts/provider-consumer.mts
 ```
 
 `npm test` never builds or downloads native code. It refuses a missing selection,

@@ -6,7 +6,7 @@ fake HTTP, without contacting Google or changing a real account.
 ```sh
 npm --prefix packages/provider-google ci --ignore-scripts
 npm --prefix packages/provider-google test
-(cd packages/provider-google && node ../../.github/scripts/provider-consumer.mjs)
+(cd packages/provider-google && node ../../.github/scripts/provider-consumer.mts)
 ```
 
 The independent consumer packs and installs the candidate, supplies its copied
