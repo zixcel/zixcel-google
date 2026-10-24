@@ -79,7 +79,9 @@ credential-free request plan that leaves execution with Crowsi. Retaining the
 existing bounded executor and imported data avoids a second HTTP/auth stack.
 This is a boundary decision, not a claim the SDK cannot be configured safely.
 
-No Rust dependency is added and existing dependency versions are retained. The
+No Rust dependency is added and existing Rust dependency versions are retained.
+The TypeScript adapter adopts the already published Crowsi HTTP transport 0.12.1
+for explicit indeterminate-write errors; it does not duplicate that generic logic. The
 hosted footprint job compares this candidate with accepted baseline 7ceb3d1 using
 two independent cold target directories, records elapsed build time, binary size,
 locked package count and maintained source bytes. Timings are runner-specific;
