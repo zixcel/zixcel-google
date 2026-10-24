@@ -1,0 +1,11 @@
+Selected API descriptions and schema documentation: Google LLC.
+Sources: https://iam.googleapis.com/$discovery/rest?version=v1
+         https://www.googleapis.com/discovery/v1/apis/compute/v1/rest
+Discovery documentation: https://developers.google.com/discovery/v1/reference/apis
+The catalogs are selected/reformatted from these sources by the Zix importer.
+No upstream documentation text has been independently relicensed by HAT Inc.
+Google Developers documentation terms: Creative Commons Attribution 4.0,
+https://creativecommons.org/licenses/by/4.0/ ; code samples: Apache License 2.0.
+Attribution/policy: https://developers.google.com/terms/site-policies
+Google trademarks and other separately licensed material retain their terms.
+Original raw-byte source hashes, revision and URLs: sources.lock.json.

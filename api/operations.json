@@ -1,0 +1,135 @@
+{
+  "schema": "zix-google-operation-policy/v1",
+  "operations": [
+    {
+      "id": "service-account.get",
+      "api_method": "iam.projects.serviceAccounts.get",
+      "effect": "read",
+      "required_permissions": [
+        "iam.serviceAccounts.get"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get"
+    },
+    {
+      "id": "service-account.disable",
+      "api_method": "iam.projects.serviceAccounts.disable",
+      "effect": "write",
+      "required_permissions": [
+        "iam.serviceAccounts.disable"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/disable"
+    },
+    {
+      "id": "service-account.delete",
+      "api_method": "iam.projects.serviceAccounts.delete",
+      "effect": "write",
+      "required_permissions": [
+        "iam.serviceAccounts.delete"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/delete"
+    },
+    {
+      "id": "key.get",
+      "api_method": "iam.projects.serviceAccounts.keys.get",
+      "effect": "read",
+      "required_permissions": [
+        "iam.serviceAccountKeys.get"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts.keys/get"
+    },
+    {
+      "id": "key.disable",
+      "api_method": "iam.projects.serviceAccounts.keys.disable",
+      "effect": "write",
+      "required_permissions": [
+        "iam.serviceAccountKeys.disable"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts.keys/disable"
+    },
+    {
+      "id": "key.delete",
+      "api_method": "iam.projects.serviceAccounts.keys.delete",
+      "effect": "write",
+      "required_permissions": [
+        "iam.serviceAccountKeys.delete"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts.keys/delete"
+    },
+    {
+      "id": "instance.get",
+      "api_method": "compute.instances.get",
+      "effect": "read",
+      "required_permissions": [
+        "compute.instances.get"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_operation_and_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/compute/docs/reference/rest/v1/instances/get"
+    },
+    {
+      "id": "instance.stop",
+      "api_method": "compute.instances.stop",
+      "effect": "write",
+      "required_permissions": [
+        "compute.instances.stop"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_operation_and_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/compute/docs/reference/rest/v1/instances/stop"
+    },
+    {
+      "id": "instance.delete",
+      "api_method": "compute.instances.delete",
+      "effect": "write",
+      "required_permissions": [
+        "compute.instances.delete"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_operation_and_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/compute/docs/reference/rest/v1/instances/delete"
+    },
+    {
+      "id": "instance.operation-get",
+      "api_method": "compute.zoneOperations.get",
+      "effect": "read",
+      "required_permissions": [
+        "compute.zoneOperations.get"
+      ],
+      "request_charge": "not_assessed",
+      "creates_billable_resources": false,
+      "completion": "scoped_operation_and_post_state",
+      "automatic_retry": false,
+      "iam_evidence": "https://docs.cloud.google.com/compute/docs/reference/rest/v1/zoneOperations/get"
+    }
+  ]
+}

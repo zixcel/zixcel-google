@@ -60,12 +60,12 @@ is performed by these local plans or source tests.
 
 ## Versions and release paths
 
-This source changes the native package identity to `zixcel-google-cli` (0.4.0),
+This source changes the native package identity to `zixcel-google-cli` (0.6.0),
 with `zixcel-google-core` at the same workspace version. The native release tag is
 `google/v<google-cli version>`. Previous `google-admin/*` releases remain immutable.
 The executable and read protocol remain `zix-google` and `zix-provider/v1`.
 
-The TypeScript candidate is 0.2.0: callers explicitly create/pass a native planner
+The TypeScript candidate is 0.3.0: callers explicitly create/pass a native planner
 and a CredentialSource. `cliCredentials`, static operation builders and arbitrary
 Google extension catalogs are removed. Native package hashes and npm versions
 are independently released; no package is claimed published by a manifest change.
@@ -85,3 +85,5 @@ operations, financial reconciliation and publication require separate evidence.
 
 Official label API: [Project etag](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects)
 and [projects.patch](https://docs.cloud.google.com/resource-manager/reference/rest/v3/projects/patch).
+
+The separately exposed [lifecycle planner](api-lifecycle.md) imports exact IAM/Compute contracts through Zix. It retains context/digest and explicit evidence classification; it does not extend the six-operation credentialed control surface.

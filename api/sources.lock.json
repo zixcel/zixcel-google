@@ -1,0 +1,43 @@
+{
+  "schema": "zix-google-api-sources/v1",
+  "importer": {
+    "repository": "https://github.com/zixcel/cli",
+    "binary_sha256": "77d0a381d05318328a08d4964fa3164504cfe19d71b81211f29b068d8851abc8"
+  },
+  "sources": [
+    {
+      "api": "iam",
+      "version": "v1",
+      "revision": "20261016",
+      "url": "https://iam.googleapis.com/$discovery/rest?version=v1",
+      "source_sha256": "ad8aa647feb0fed093572e34a80b2215f66b7dfd9ff0219ed72cd4c3c779702a",
+      "catalog_sha256": "e6e0fb4bedc526057c06d1339169e87dbcc5ccd60ef6bafb59a4cc0e76d85d72",
+      "catalog": "iam.catalog.json",
+      "review": "iam.review.json",
+      "selected_methods": [
+        "iam.projects.serviceAccounts.get",
+        "iam.projects.serviceAccounts.disable",
+        "iam.projects.serviceAccounts.delete",
+        "iam.projects.serviceAccounts.keys.get",
+        "iam.projects.serviceAccounts.keys.disable",
+        "iam.projects.serviceAccounts.keys.delete"
+      ]
+    },
+    {
+      "api": "compute",
+      "version": "v1",
+      "revision": "20261016",
+      "url": "https://www.googleapis.com/discovery/v1/apis/compute/v1/rest",
+      "source_sha256": "63fc796eee1762091e28d0050791dc3e38059c306925370f8e62997f7cb52676",
+      "catalog_sha256": "a3040b3fc4902b6b73451146fc2ae068cefa23f3d5c5236cb8406c1a70069fd0",
+      "catalog": "compute.catalog.json",
+      "review": "compute.review.json",
+      "selected_methods": [
+        "compute.instances.get",
+        "compute.instances.stop",
+        "compute.instances.delete",
+        "compute.zoneOperations.get"
+      ]
+    }
+  ]
+}

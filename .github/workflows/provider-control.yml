@@ -33,6 +33,7 @@ jobs:
         working-directory: packages/provider-google
         run: |
           npm ci --ignore-scripts
+          node ../../tools/api-import/check-lock.mts
           npm test
-          node ../../.github/scripts/provider-consumer.mjs
+          node ../../.github/scripts/provider-consumer.mts
           npm pack --ignore-scripts

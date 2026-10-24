@@ -54,6 +54,8 @@ fn run() -> Result<(), &'static str> {
     }
     if filename == "zix-google" {
         for (source, name) in [
+            ("api/NOTICE", "GOOGLE-API-NOTICE"),
+            ("docs/api-lifecycle.md", "API-LIFECYCLE.md"),
             (
                 "playground/inspect-accessible-local.sh",
                 "inspect-accessible-local.sh",

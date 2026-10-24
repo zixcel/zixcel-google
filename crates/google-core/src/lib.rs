@@ -7,6 +7,7 @@ pub mod exports;
 mod http;
 pub mod inventory;
 mod keys;
+pub mod lifecycle;
 mod query;
 mod request;
 pub use error::{Error, Result};

@@ -8,9 +8,9 @@ const env = { ...process.env, NPM_CONFIG_REGISTRY: 'https://registry.npmjs.org',
  NPM_CONFIG_USERCONFIG: join(project, 'empty.npmrc'), NPM_CONFIG_GLOBALCONFIG: join(project, 'empty-global.npmrc'),
  ZIX_GOOGLE_TEST_BINARY: join(project, 'zix-google'),
  NPM_CONFIG_CACHE: join(project, 'cache'), NODE_AUTH_TOKEN: '', NPM_TOKEN: '', GH_TOKEN: '', GITHUB_TOKEN: '' }
-const run = (command, args, cwd = project) => {
+const run = (command: string, args: string[], cwd = project) => {
  try { return execFileSync(command, args, { cwd, env, stdio: 'pipe', timeout: 180000 }) }
- catch (error) { throw new Error(`${command} failed: ${String(error.stdout ?? '').slice(-1600)} ${String(error.stderr ?? '').slice(-1600)}`) }
+ catch (failure) { const error = failure as { stdout?: unknown; stderr?: unknown }; throw new Error(`${command} failed: ${String(error.stdout ?? '').slice(-1600)} ${String(error.stderr ?? '').slice(-1600)}`) }
 }
 try {
  if (!process.env.ZIX_GOOGLE_TEST_BINARY || !process.env.ZIX_GOOGLE_TEST_SHA256) throw new Error('Select an explicitly verified native artifact')
@@ -20,8 +20,8 @@ try {
  const packed = JSON.parse(run('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', project], root))
  const rows = Array.isArray(packed) ? packed : Object.values(packed)
  if (rows.length !== 1 || rows[0].name !== manifest.name) throw new Error('Unexpected candidate identity')
- const paths = rows[0].files.map(file => file.path)
- if (paths.some(path => /^dist\/(billing|discovery|credentials)\./.test(path))) throw new Error('Retired Google builders remain in archive')
+ const paths = rows[0].files.map((file: {path: string}) => file.path)
+ if (paths.some((path: string) => /^dist\/(billing|discovery|credentials)\./.test(path))) throw new Error('Retired Google builders remain in archive')
  writeFileSync(join(project, 'package.json'), JSON.stringify({ private: true, type: 'module' }))
  run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', join(project, rows[0].filename), 'typescript@5.9.3', '@types/node@24.19.2'])
  const tests = readFileSync('test/control.test.mjs', 'utf8').replace("'../dist/index.mjs'", JSON.stringify(manifest.name))
@@ -35,7 +35,7 @@ control.prepare('account.read', {});
 `)
  run('node', ['node_modules/typescript/bin/tsc', '--noEmit', '--strict', '--skipLibCheck', '--module', 'NodeNext', '--moduleResolution', 'NodeNext', 'consumer.mts'])
  const publicTests = ['control.test.mjs']
- for (const name of readdirSync('test').filter(name => name.endsWith('.test.mjs') && name !== 'control.test.mjs')) {
+ for (const name of readdirSync('test').filter(name => (name.endsWith('.test.mjs') || name.endsWith('.test.mts')) && name !== 'control.test.mjs')) {
   const sourceTest = readFileSync(join('test', name), 'utf8')
   const imports = [...sourceTest.matchAll(/['"]\.\.\/dist\/([^'"]+)['"]/g)]
   if (!imports.length || imports.some(match => match[1] !== 'index.mjs')) continue

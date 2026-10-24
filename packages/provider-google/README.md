@@ -7,7 +7,7 @@ one-use administrator authorization/HTTP transport. Apache-2.0.
 
 Linux (including WSL), Node 24 and an explicitly installed, verified `zix-google`
 native package supporting `zix-google-control/v1`. Runtime users do not need a
-Rust compiler or gcloud. This source is the 0.2.0 candidate; check official release
+Rust compiler or gcloud. This source is the 0.3.0 candidate; check official release
 availability independently before installing it. There is no automatic download,
 login, credential-store lookup, HTTP call or Cloud change on package import.
 
@@ -63,7 +63,7 @@ npm ci --ignore-scripts
 export ZIX_GOOGLE_TEST_BINARY=/absolute/path/to/zix-google
 export ZIX_GOOGLE_TEST_SHA256=replace_with_verified_64_character_sha256
 npm test
-node ../../.github/scripts/provider-consumer.mjs
+node ../../.github/scripts/provider-consumer.mts
 ```
 
 `npm test` never builds or downloads native code. It refuses a missing selection,
@@ -81,3 +81,5 @@ native executable. No real credential or Cloud account is used. Release and live
 acceptance are separate. The previous implicit gcloud helper, duplicate request
 builders and arbitrary extension catalog are removed; callers must adopt the
 explicit planner argument. See [architecture](../../docs/architecture.md).
+
+`createLifecyclePlanner(selection)` exposes the native lifecycle planning and evidence classification API. It deliberately provides no credentials, approval or execution. See [lifecycle policy](../../docs/api-lifecycle.md) for exact target bindings and Compute identity limitations. Existing `createControl` operations are unchanged.
