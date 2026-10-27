@@ -52,6 +52,8 @@ fn run() -> Result<(), &'static str> {
     for path in ["LICENSE", "NOTICE"] {
         fs::copy(path, directory.join(path)).map_err(|_| "owner_notice_missing")?;
     }
+    let mut manifest_sha = None;
+    let mut guidance_sha = None;
     if filename == "zix-google" {
         for (source, name) in [
             ("api/NOTICE", "GOOGLE-API-NOTICE"),
@@ -85,13 +87,42 @@ fn run() -> Result<(), &'static str> {
         }
         let _: serde_json::Value =
             serde_json::from_slice(&result.stdout).map_err(|_| "manifest_failed")?;
+        manifest_sha = Some(archive::hash(&result.stdout));
         fs::write(directory.join("google.extension.json"), result.stdout)
             .map_err(|_| "output_unavailable")?;
     }
+    if filename == "zix-google" {
+        let result = Command::new(binary)
+            .env_clear()
+            .arg("--guidance")
+            .output()
+            .map_err(|_| "guidance_failed")?;
+        if !result.status.success() || result.stdout.len() > 65536 {
+            return Err("guidance_failed");
+        }
+        let catalog: zix_native_provider::GuidanceCatalog =
+            serde_json::from_slice(&result.stdout).map_err(|_| "guidance_failed")?;
+        if !catalog.validate()
+            || catalog.namespace != "google"
+            || catalog.version != env!("CARGO_PKG_VERSION")
+        {
+            return Err("guidance_failed");
+        }
+        guidance_sha = Some(archive::hash(&result.stdout));
+        fs::write(directory.join("google.guidance.json"), result.stdout)
+            .map_err(|_| "output_unavailable")?;
+    }
     licenses::collect(&directory)?;
-    let record = serde_json::json!({"schema":"zix-native-release/v1","package":env!("CARGO_PKG_NAME"),
+    let mut record = serde_json::json!({"schema":"zix-native-release/v1","package":env!("CARGO_PKG_NAME"),
         "version":env!("CARGO_PKG_VERSION"),"repository":env!("CARGO_PKG_REPOSITORY"),"source":source,"target":target,
         "binary":filename,"binary_sha256":archive::hash(&fs::read(binary).map_err(|_|"binary_unavailable")?)});
+    if let Some(sha) = manifest_sha {
+        record["manifest_sha256"] = serde_json::json!(sha);
+    }
+    if let Some(sha) = guidance_sha {
+        record["guidance_sha256"] = serde_json::json!(sha);
+        record["namespace"] = serde_json::json!("google");
+    }
     fs::write(
         directory.join("RELEASE.json"),
         serde_json::to_vec_pretty(&record).map_err(|_| "invalid_record")?,
