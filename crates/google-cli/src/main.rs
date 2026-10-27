@@ -6,6 +6,10 @@ use std::{
 use zixcel_google_cli::protocol;
 use zixcel_google_core::{Error, control, lifecycle};
 fn main() -> ExitCode {
+    let args = std::env::args().skip(1).collect::<Vec<_>>();
+    if args == ["--manifest"] || args == ["--guidance"] || args == ["--zix-provider-v2"] {
+        return zixcel_google_cli::guided::entry();
+    }
     match run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {

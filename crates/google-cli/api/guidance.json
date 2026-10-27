@@ -1,0 +1,1354 @@
+[
+  {
+    "operation": "projects.list",
+    "selectors": {},
+    "intent": "list_visible_google_projects",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "projects.inspect",
+    "selectors": {},
+    "intent": "inspect_selected_google_project",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "billing.accounts.list",
+    "selectors": {},
+    "intent": "list_visible_billing_accounts",
+    "keywords": [
+      "GOOGLE",
+      "BILLING",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "billing.projects.list",
+    "selectors": {},
+    "intent": "list_selected_billing_account_projects",
+    "keywords": [
+      "GOOGLE",
+      "BILLING",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "billing.resourceAssociations.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "billing.project.inspect",
+    "selectors": {},
+    "intent": "inspect_selected_project_billing_link",
+    "keywords": [
+      "GOOGLE",
+      "BILLING",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "services.list",
+    "selectors": {},
+    "intent": "list_selected_project_services",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "serviceusage.services.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "iam.accounts.list",
+    "selectors": {},
+    "intent": "list_selected_project_service_accounts",
+    "keywords": [
+      "GOOGLE",
+      "IAM",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "iam.serviceAccounts.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "assets.search",
+    "selectors": {},
+    "intent": "search_selected_project_assets",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "cloudasset.assets.searchAllResources",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "compute.instances.list",
+    "selectors": {},
+    "intent": "list_selected_project_instances",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "compute.instances.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "compute.disks.list",
+    "selectors": {},
+    "intent": "list_selected_project_disks",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "compute.disks.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "compute.snapshots.list",
+    "selectors": {},
+    "intent": "list_selected_project_snapshots",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "compute.snapshots.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "compute.commitments.list",
+    "selectors": {},
+    "intent": "list_selected_project_commitments",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "compute.commitments.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "compute.addresses.list",
+    "selectors": {},
+    "intent": "list_selected_project_addresses",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "compute.addresses.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "sql.instances.list",
+    "selectors": {},
+    "intent": "list_selected_project_sql_instances",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "cloudsql.instances.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "storage.buckets.list",
+    "selectors": {},
+    "intent": "list_selected_project_buckets",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "storage.buckets.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "run.services.list",
+    "selectors": {},
+    "intent": "list_selected_project_run_services",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "run.services.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "overview.accessible",
+    "selectors": {},
+    "intent": "summarize_accessible_project_visibility",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "resourcemanager.projects.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "This explicitly aggregates multiple reads; prefer a narrow operation when its result meets the goal. Partial visibility and unknown charges remain unresolved",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "overview.project",
+    "selectors": {},
+    "intent": "summarize_explicit_project_inventory",
+    "keywords": [
+      "GOOGLE",
+      "INVENTORY",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "billing.resourceAssociations.list, cloudasset.assets.searchAllResources, cloudsql.instances.list, compute.addresses.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "compute.commitments.list, compute.disks.list, compute.instances.list, compute.snapshots.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "iam.serviceAccounts.list, resourcemanager.projects.get, run.services.list, serviceusage.services.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "storage.buckets.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "This explicitly aggregates multiple reads; prefer a narrow operation when its result meets the goal. Partial visibility and unknown charges remain unresolved",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "billing.exports.discover",
+    "selectors": {},
+    "intent": "discover_existing_billing_exports",
+    "keywords": [
+      "GOOGLE",
+      "BILLING",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "bigquery.datasets.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "bigquery.tables.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "Existing export dataset/table only; this command creates no SQL job, billing export or storage resource",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "billing.exports.read",
+    "selectors": {},
+    "intent": "read_existing_billing_export_page",
+    "keywords": [
+      "GOOGLE",
+      "BILLING",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "bigquery.tables.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "bigquery.tables.getData",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "Existing export dataset/table only; this command creates no SQL job, billing export or storage resource",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  },
+  {
+    "operation": "iam.keys.inspect",
+    "selectors": {},
+    "intent": "inspect_one_service_account_key",
+    "keywords": [
+      "GOOGLE",
+      "IAM",
+      "READ"
+    ],
+    "requirements": [
+      {
+        "kind": "audience",
+        "value": "OAuth access token accepted by the selected Google API; ID tokens and raw private keys are different credentials",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "iam.serviceAccountKeys.list",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "provider_permission",
+        "value": "iam.serviceAccounts.get",
+        "subject": "google_credential"
+      },
+      {
+        "kind": "target_scope",
+        "value": "Selected project, billing account or service account; quota project is explicit when needed",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "IAM, accepted OAuth scopes and selected API availability are independent; no automatic API enablement or broader grant",
+        "subject": "operation"
+      },
+      {
+        "kind": "context",
+        "value": "Read metadata of the selected key without using, creating, disabling or deleting the key",
+        "subject": "operation"
+      }
+    ],
+    "next_actions": [
+      {
+        "namespace": "credential",
+        "operation": "help",
+        "purpose": "inspect_secure_credential_usage",
+        "arguments": {},
+        "on": [
+          "context",
+          "authentication"
+        ]
+      },
+      {
+        "namespace": "google",
+        "operation": "projects.inspect",
+        "purpose": "inspect_selected_project_identity",
+        "arguments": {},
+        "on": [
+          "context",
+          "authorization"
+        ],
+        "requires_context": {
+          "project": "known_and_authorized"
+        }
+      }
+    ],
+    "documentation": [
+      "https://cloud.google.com/iam/docs/permissions-reference"
+    ]
+  }
+]
