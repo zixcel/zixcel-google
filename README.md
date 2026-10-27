@@ -55,3 +55,5 @@ removed scaffolding, version changes and what remains outside source acceptance.
 The Rust source API can pass existing export bytes through provider-specific normalization into the shared bounded usage monitor; see [usage cost observations](docs/usage-cost-observations.md). Usage evidence remains separate from issued invoices and payment evidence.
 
 [Reviewed API lifecycle plans](docs/api-lifecycle.md) reuse the shared Zix importer for IAM and VM request planning and explicit completion evidence. These credential-free protocols do not activate Cloud operations.
+
+Native Zix operation discovery and diagnostic handling: [operation guidance](docs/operation-guidance.md).
